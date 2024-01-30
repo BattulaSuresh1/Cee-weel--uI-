@@ -1,0 +1,48 @@
+.az-content-title {
+    font-size: 14px;
+}
+app-cart-item {
+    display: contents;
+}
+table {
+    table-layout: fixed;
+    word-wrap: break-word;
+}
+th{
+    background: #eeeeee;
+}
+td{
+    color: #7987a1 !important;
+}
+.productImg{
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+}
+
+.productDesc {
+    padding: 8px;
+}
+
+.img{
+    width: 85px;
+    height: 85px;
+    margin-bottom: 8px; 
+}
+
+.productDetails{
+    display: flex;
+    font-size: 12px;
+    font-weight: 500;
+    width: 100%;
+}
+ 
+@media(min-width:501px) and (max-width:768px){
+    .generateinvoice,.backButton{
+        margin-bottom: 20px;
+    }
+
+    .Invoicebutton{
+        padding: 3rem;
+    }
+}

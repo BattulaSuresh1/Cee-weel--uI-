@@ -1,0 +1,25 @@
+mat-sidenav-container,
+mat-sidenav,
+mat-sidenav-content {
+    height: 100%;
+    overflow-x: hidden;
+}
+
+mat-sidenav {
+    position: fixed;
+    background-color: #394972;
+    min-width: 15%;
+    top: 64px;
+}
+
+mat-sidenav-content {
+    overflow: none;
+}
+
+.sidenav-content {
+    padding: 65px 0rem 2rem;
+    min-height: 100vh;
+    height: 100%;
+    /* overflow-y: scroll; */
+    background-color: #EDF1F5;
+}

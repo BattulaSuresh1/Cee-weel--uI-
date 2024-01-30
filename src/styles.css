@@ -1,0 +1,288 @@
+/* You can add global styles to this file, and also import other style files */
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+:root {
+    --main-white: #ffffff;
+    --main-dark-blue-color: #1780B7;
+    --main-dark-purple-color: #764B8C;
+    --main-dark-yellow-color: #F2A83B;
+    --main-dark-red-color: #EE5E5A;
+    --main-light-blue-color: #1EBED9;
+    --main-light-purple-color: #A672AD;
+    --main-light-yellow-color: #FBD35B;
+    --main-light-red-color: #F48A82;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    background-color: var(--main-white);
+}
+
+h1 {
+    Font-family: Roboto;
+    Font-size: 42px;
+    Font-weight: BOLD;
+    Line-height: 56px;
+    Color: #203442;
+}
+
+h2 {
+    Font-family: Roboto;
+    Font-size: 34px;
+    Font-weight: MEDIUM;
+    Line-height: 46px;
+    Color: #2F4656;
+}
+
+h3 {
+    Font-family: Roboto;
+    Font-size: 28px;
+    Font-weight: MEDIUM;
+    Line-height: 38px;
+    Color: #3E5463;
+}
+
+h4 {
+    Font-family: Roboto;
+    Font-size: 24px;
+    Font-weight: REGULAR;
+    Line-height: 34px;
+    Color: #536876;
+}
+
+h4 {
+    Font-family: ROBOTO;
+    Font-size: 18px;
+    Font-weight: REGULAR;
+    Line-height: 28px;
+    Color: #536876;
+}
+
+p {
+    Font-family: ROBOTO;
+    Font-size: 14px;
+    Font-weight: REGULAR;
+    Line-height: 23px;
+    Color: #7E8998;
+}
+
+.btn-int-blue {
+    color: var(--main-white);
+    background-color: var(--main-dark-blue-color);
+    background-image: linear-gradient(to left, #1780B7, #1EBED9)!important;
+}
+
+.btn-int-red {
+    color: var(--main-white);
+    background-color: var(--main-dark-red-color);
+}
+
+.btn-int-purple {
+    color: var(--main-white);
+    background-color: var(--main-dark-purple-color);
+}
+
+.btn-int-purple {
+    color: var(--main-white);
+    background-color: var(--main-dark-yellow-color);
+}
+
+.btn-int-blue {
+    background-image: linear-gradient(to right, var(--main-light-blue-color), var(--main-dark-blue-color));
+}
+
+.btn-int-red {
+    background-image: linear-gradient(to right, var(--main-light-red-color), var(--main-dark-red-color));
+}
+
+.btn-int-purple {
+    background-image: linear-gradient(to right, var(--main-light-purple-color), var(--main-dark-purple-color));
+}
+
+.btn-int-yellow {
+    background-image: linear-gradient(to right, var(--main-light-yellow-color), var(--main-dark-yellow-color));
+}
+
+.color-red {
+    color: var(--main-dark-red-color);
+}
+
+.toolbar-bg-blue {
+    background-color: var(--main-dark-blue-color);
+    color: var(--main-white);
+}
+
+.toolbar-bg-blue h2 {
+    color: var(--main-white);
+}
+
+button:focus {
+    outline: none!important;
+}
+
+.mat-raised-button {
+    line-height: 32px !important;
+    border-radius: 5px !important;
+}
+
+.cdk-overlay-container {
+    z-index: 999!important;
+}
+
+.wrapper {
+    margin: 0px 0px;
+}
+
+.wrapper .row.table-toolbar {
+    margin-left: 0px;
+    margin-right: 0px;
+    align-items: center;
+}
+
+.mat-table {
+    width: 100%;
+}
+
+.mat-header-row {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.mat-table th.mat-header-cell {
+    font-size: 16px;
+    color: #4a4e52;
+    border-bottom-width: 2px;
+}
+
+.mat-table th.mat-sort-header-sorted {
+    color: #4a4e52;
+}
+
+.mat-table .mat-cell,
+.mat-table .mat-footer-cell {
+    font-size: 14px;
+    color: #8282ad;
+}
+
+.mat-table-responsive {
+    border: 2px solid #ddd;
+}
+
+.table-toolbar .mat-paginator {
+    background-color: #EDF1F5;
+}
+
+.table-toolbar .mat-paginator .mat-icon-button {
+    height: 30px !important;
+    line-height: 25px!important;
+    border-radius: 10%!important;
+    border: 1px solid #C0C9D5 !important;
+}
+
+.table-toolbar .mat-paginator .mat-paginator-icon {
+    color: #C0C9D5;
+}
+
+.table-toolbar .mat-paginator .mat-paginator-page-size-select {
+    width: 85px;
+}
+
+.table-toolbar .button-group {
+    text-align: right;
+}
+
+.button-group {
+    padding: 5px;
+    width: 100%;
+    display: block;
+}
+
+.button-group .mat-button-base {
+    margin: 5px;
+    /* min-width: 35%; */
+}
+
+.footer-block {
+    padding: 0rem 0.25rem;
+}
+
+.advancedSearch {
+    display: block;
+    padding: 10px;
+}
+
+.advancedSearch button {
+    border-radius: 21px !important;
+    padding: 0 5px !important;
+    font-size: 13px;
+    font-weight: 400;
+    text-align: left;
+    color: #aeb7c1;
+    min-width: 85%;
+    z-index: 100;
+}
+
+.advancedSearch .mat-button-wrapper span {
+    margin: 0px 5px;
+}
+
+.advancedSearch .mat-button-wrapper .mat-icon {
+    height: 20px;
+}
+
+.advancedSearch .mat-raised-button {
+    box-shadow: none;
+}
+
+.mat-form-field {
+    width: 100%;
+    margin: 0.8rem 0rem 0rem 0rem;
+    padding: 0rem 1.25rem;
+}
+
+
+form {
+    padding: 1.25rem;
+}
+
+.mat-dialog-container {
+    padding: 0px !important;
+}
+
+.mat-dialog-container .container-fluid {
+    padding-right: 0px;
+    padding-left: 0px;
+}
+
+.forModalClose {
+    display: flex;
+    flex-direction: row-reverse;
+    width: 100%;
+}
+
+.forModalClose span {
+    color: #ffffffa8;
+    align-items: center;
+    justify-content: center;
+    /* border: 2px solid; */
+    border-radius: 50%;
+    min-width: 30px;
+    padding: 0px 8px;
+    font-size: 13px;
+}
+
+.forModalClose span:active,
+.forModalClose span:focus,
+.forModalClose span:hover {
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.cdk-overlay-container {
+    overflow-y: scroll;
+}

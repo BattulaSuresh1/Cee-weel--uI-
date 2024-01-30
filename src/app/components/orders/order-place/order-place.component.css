@@ -1,0 +1,9 @@
+.order-details{
+    padding: 1rem;
+    border: 1px solid #eee;
+    border-radius: 8px;
+}
+.button-group{
+    padding: 1rem;
+    text-align: right;
+}

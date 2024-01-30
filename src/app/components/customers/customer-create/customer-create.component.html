@@ -1,0 +1,157 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <h3 class="modal-title">{{buttonText}} Customer</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cancel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <form [formGroup]="customerForm" #myForm="ngForm" (ngSubmit)="customerFormSubmit()">
+
+            <mat-form-field>
+                <mat-label>Name</mat-label>
+                <input type="text" formControlName="name" placeholder="Enter Your Full Name" matInput>
+                <mat-error *ngIf="formValidate?.name?.errors?.required">This field is required.</mat-error>
+                <mat-error *ngIf="formValidate?.name?.errors?.serverError"> {{ formValidate?.name?.errors?.serverError }} </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Email</mat-label>
+                <input type="email" formControlName="email" placeholder="Enter Your Email " matInput>
+                 <mat-error *ngIf="formValidate?.email?.errors?.required">This field is required.</mat-error>
+                <mat-error *ngIf="formValidate?.email?.errors?.email">Please enter valid eamil.</mat-error>
+                <mat-error *ngIf="formValidate?.email?.errors?.serverError"> {{ formValidate?.email?.errors?.serverError }} </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>  
+                <mat-label>Phone No</mat-label>
+                <input type="number" formControlName="phone" placeholder="Enter Your Phone Number" matInput>
+                <mat-error *ngIf="formValidate?.phone?.errors?.required">This field is required.</mat-error>
+                <mat-error *ngIf="formValidate?.phone?.pattern?.required">Invalid Phone Number</mat-error>
+                <mat-error *ngIf="formValidate?.phone?.min?.required">It can accept onnlt 10 numbers</mat-error>
+                <mat-error *ngIf="formValidate?.phone?.errors?.serverError"> {{ formValidate?.phone?.errors?.serverError }} </mat-error>
+            </mat-form-field> 
+
+            <mat-form-field>
+              <mat-label>Alternate Phone No</mat-label>
+              <input type="number" formControlName="alternate_phone" placeholder="Enter Your Alternate Phone Number" matInput>
+               <mat-error *ngIf="formValidate?.alternate_phone?.errors?.required">This field is required.</mat-error>
+               <mat-error *ngIf="formValidate?.alternate_phone?.pattern?.required">Invalid Phone Number</mat-error>
+               <mat-error *ngIf="formValidate?.alternate_phone?.min?.required">It can accept onnlt 10 numbers</mat-error>
+              <mat-error *ngIf="formValidate?.alternate_phone?.errors?.serverError"> {{ formValidate?.alternate_phone?.errors?.serverError }} </mat-error>
+          </mat-form-field>
+
+            <!-- <mat-form-field>
+                <mat-label> SAP Code</mat-label>
+                <input type="" formControlName="code" placeholder="Enter SAP Code" matInput>
+                 <mat-error *ngIf="formValidate?.code?.errors?.required">This field is required.</mat-error>
+                <mat-error *ngIf="formValidate?.code?.errors?.serverError"> {{ formValidate?.code?.errors?.serverError }} </mat-error>
+            </mat-form-field> -->
+
+            <mat-form-field>
+                <mat-label>Profession</mat-label>
+                <input type="text" formControlName="profession" placeholder="Enter Your Profession" matInput>
+                <mat-error *ngIf="formValidate?.profession?.errors?.required">This field is required.</mat-error>
+                <mat-error *ngIf="formValidate?.profession?.errors?.serverError"> {{ formValidate?.profession?.errors?.serverError }} </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Date Of Birth</mat-label>
+                <input  matInput [matDatepicker]="picker" formControlName="date_of_birth" maxlength="10" placeholder="MM/DD/YYYY" (input)="onDatepickerInput($event)">
+                 <mat-error *ngIf="formValidate?.date_of_birth?.errors?.required">This field is required.</mat-error>
+                <mat-error *ngIf="formValidate?.date_of_birth?.errors?.serverError"> {{
+                    formValidate?.date_of_birth?.errors?.serverError }} </mat-error>
+                      <mat-datepicker #picker max="maxDate"></mat-datepicker>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Age</mat-label>
+                <input type="age" formControlName="age" matInput>
+                <mat-error *ngIf="customerForm.get('age').hasError('required')">This field is required.</mat-error>
+                <mat-error *ngIf="formValidate?.age?.errors?.serverError"> {{ formValidate?.age?.errors?.serverError }} </mat-error>
+            </mat-form-field> 
+
+             <mat-form-field>
+                <mat-label>Date Of Admission</mat-label>
+                <input type="text" formControlName="doa" matInput  maxlength="10"  max="31-12-2999" placeholder="DD/MM/YYYY" (input)="onDatepickerInput($event)">
+                 <mat-error *ngIf="formValidate?.doa?.errors?.required">This field is required.</mat-error>
+                <mat-error *ngIf="formValidate?.doa?.errors?.serverError"> {{ formValidate?.doa?.errors?.serverError }} </mat-error>
+            </mat-form-field> 
+
+            <mat-form-field>
+                <mat-label>Life Style</mat-label>
+                <input type="text" formControlName="life_style" placeholder="Enter Your Life Style" matInput>
+                 <mat-error *ngIf="formValidate?.life_style?.errors?.required">This field is required.</mat-error>
+                <mat-error *ngIf="formValidate?.life_style?.errors?.serverError"> {{ formValidate?.life_style?.errors?.serverError }} </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Address</mat-label>
+                <input type="text" formControlName="address" placeholder="Enter Your Prefect Address" matInput>
+                 <mat-error *ngIf="formValidate?.address?.errors?.required">This field is required.</mat-error>
+                <mat-error *ngIf="formValidate?.address?.errors?.serverError"> {{ formValidate?.address?.errors?.serverError }} </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Nearby</mat-label>
+                <input type="text" formControlName="nearby" matInput>
+                 <mat-error *ngIf="formValidate?.nearby?.errors?.required">This field is required.</mat-error>
+                <mat-error *ngIf="formValidate?.nearby?.errors?.serverError"> {{ formValidate?.nearby?.errors?.serverError }} </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label> Country</mat-label>
+                <mat-select formControlName="country"  [(ngModel)]="selectedCountry" >
+                    <!-- <input matInput type="text"  class="example-input"> -->
+                    <mat-option *ngFor="let country of countries;" [value]="country?.id">
+                        <span>{{country?.name}}</span>
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="formValidate?.country?.errors?.required">This field is required.</mat-error>
+                 <mat-error *ngIf="customerForm.get('country').hasError('required')">This field is required.</mat-error>
+                <mat-error *ngIf="formValidate?.country?.errors?.serverError"> {{ formValidate?.country?.errors?.serverError }} </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>State</mat-label>
+                <mat-select formControlName="state" >
+                    <!-- <input  matInput type="text"  class="example-input">  -->
+                    <mat-option *ngFor="let state of states;" [value]="state?.id">
+                        <span>{{state?.name}}</span>
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="customerForm.get('state').hasError('required')">This field is required.</mat-error>
+                 <mat-error *ngIf="formValidate?.state?.errors?.required"></mat-error>
+                <mat-error *ngIf="formValidate?.state?.errors?.serverError"> {{ formValidate?.state?.errors?.serverError }} </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>City</mat-label>
+              <mat-select formControlName="city">
+                <!-- <input  matInput type="text"  class="example-input">  -->
+                  <mat-option *ngFor="let city of cities;" [value]="city?.id">
+                      <span>{{city?.name}}</span>
+                  </mat-option>
+              </mat-select>
+              <mat-error *ngIf="customerForm.get('city').hasError('required')">This field is required.</mat-error>
+               <mat-error *ngIf="formValidate?.city?.errors?.required"></mat-error>
+              <mat-error *ngIf="formValidate?.city?.errors?.serverError"> {{ formValidate?.city?.errors?.serverError }} </mat-error>
+          </mat-form-field>
+
+          <app-file-upload
+              requiredFileType="image/png"
+              [uploadType]="uploadType"
+              (fileUploaded)="addAttachment($event)">
+          </app-file-upload>
+
+            <div class="footer-block text-center">
+                <div class="button-group">
+                    <button type="submit" mat-raised-button class="btn-int-blue">{{ buttonText }} </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

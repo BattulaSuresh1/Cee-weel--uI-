@@ -1,0 +1,80 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <h3 class="modal-title">{{ btnText }} Request</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cancel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <form [formGroup]="inventoryForm" #myForm="ngForm" (ngSubmit)="inventoryFormSubmit()">
+
+            <mat-form-field>
+                <mat-label>Store</mat-label>
+                <mat-select formControlName="storeId">
+                    <mat-option *ngFor="let store of stores;" [value]="store?.id">
+                        <span>{{store?.name}}</span>
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="formValidate?.storeId?.errors?.required">This field is required.</mat-error>
+                <mat-error *ngIf="formValidate?.storeId?.errors?.serverError"> {{ formValidate?.storeId?.errors?.serverError }} </mat-error>
+            </mat-form-field>
+            <button  mat-raised-button color="accent" class="btn-int-blue my-1" type="button" (click)="addProduct()">Add</button>
+            <div formArrayName="products">
+                <div class="productList" *ngFor="let product of inventoryForm.get('products')?.controls; let i=index">
+                    <div [formGroupName]="i">
+                            <mat-form-field>
+                                <mat-label>Product</mat-label>
+                                <mat-select formControlName="productId">
+                                    <mat-option *ngFor="let product of products;" [value]="product?.id">
+                                        <span>{{product?.name}}</span>
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="inventoryForm?.get(['products', i, 'productId'])?.errors?.required">This field is required.</mat-error>
+                                <!-- <mat-error *ngIf="inventoryForm?.get(['products', i, 'productId'])?.errors?.serverError"> {{ inventoryForm?.productId?.errors?.serverError }} </mat-error> -->
+                
+                            </mat-form-field>
+                            <mat-form-field>
+                                <mat-label>Available</mat-label>
+                                <input type="text" formControlName="available" matInput>
+                                <mat-error *ngIf="inventoryForm?.get(['products', i, 'available'])?.errors?.required">This field is required.</mat-error>
+                                <!-- <mat-error *ngIf="inventoryForm?.get(['products', i, 'available'])?.errors?.serverError"> {{ formValidate?.available?.errors?.serverError }} </mat-error> -->
+                            </mat-form-field>
+                            <button  mat-button color="warn" class="btn-int-red" type="button" (click)="removeProduct(i)">Remove</button>
+                    </div>
+                </div>
+            </div>
+           
+
+            <!-- <mat-form-field>
+                <mat-label>Product</mat-label>
+                <mat-select formControlName="productId">
+                    <mat-option *ngFor="let product of products;" [value]="product?.id">
+                        <span>{{product?.name}}</span>
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="formValidate?.productId?.errors?.required">This field is required.</mat-error>
+                <mat-error *ngIf="formValidate?.productId?.errors?.serverError"> {{ formValidate?.productId?.errors?.serverError }} </mat-error>
+
+            </mat-form-field>
+
+            <mat-form-field *ngIf="inventoryId != undefined">
+                <mat-label>Exiting Count</mat-label>
+                <input type="text" formControlName="count" matInput readonly>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Available</mat-label>
+                <input type="text" formControlName="available" matInput>
+                <mat-error *ngIf="formValidate?.available?.errors?.required">This field is required.</mat-error>
+                <mat-error *ngIf="formValidate?.available?.errors?.serverError"> {{ formValidate?.available?.errors?.serverError }} </mat-error>
+            </mat-form-field> -->
+
+            <div class="footer-block text-center">
+                <div class="button-group">
+                    <button type="submit" mat-raised-button class="btn-int-blue"> {{ btnText }} </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

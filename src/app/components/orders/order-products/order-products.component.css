@@ -1,0 +1,81 @@
+.product-items{
+    display: flex;
+    padding: 8px;
+    margin: 5px;
+    font-size: 16px;
+}
+
+.product-items .product-list{
+    width: 20%;
+    color: #212529;
+    text-align: left
+}
+
+.toggleBtn{
+    display:flex;
+    font-size: 16px;
+    margin-left: 5px;
+    padding: 8px;
+    border: 1px solid #eee;
+}
+
+::ng-deep .mat-drawer-content {
+    min-height: 780px;
+}
+
+::ng-deep .mat-drawer-inner-container,
+::ng-deep .mat-drawer-content {
+    overflow-x: hidden!important;;
+}
+::ng-deep .mat-form-field-label-wrapper {
+    left: 3px !important;
+}
+::ng-deep .mat-select-value-text {
+    margin-left: 3px;     
+}
+
+.mat-slide-toggle {
+  padding-left: 1rem;
+}
+
+.form-filter{
+    font-size: 12px;
+    display: flex;
+    font-size: 12px;
+    flex-direction: column;
+    max-width: 230px;
+    margin: 8px;
+}
+
+.form-filter mat-form-field {
+    display: inline-block;
+    width: 100%;
+    /* margin: 8px 0px; */
+}
+
+.list-group{
+    width: 230px;
+}
+
+.list-group-item{
+    font-size: 12px;
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-around;
+}
+
+h3 {
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.forSearchFilter {
+    margin-bottom: 5px;
+}
+
+.backButton{
+    text-align:right;
+    margin-bottom: 1rem;
+}

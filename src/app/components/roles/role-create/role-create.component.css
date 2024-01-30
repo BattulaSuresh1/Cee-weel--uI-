@@ -1,0 +1,20 @@
+.permissions-block{
+    display: inline-block;
+    width: 100%;
+    padding: 1rem;
+}
+
+.permissions-table{
+    width: 100%;
+    margin: 5px 0px;
+}
+
+.permissions-table thead{
+   background: #eee;
+   padding: 5px;
+}
+
+.permissions-table thead tr th,
+.permissions-table tbody tr td {
+    padding: 4px 10px;
+}

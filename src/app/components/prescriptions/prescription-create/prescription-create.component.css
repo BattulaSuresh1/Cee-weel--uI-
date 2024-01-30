@@ -1,0 +1,57 @@
+mat-form-field{
+    width: 263px;
+}
+.mat-tab-label .mat-tab-label-content {
+    color: #1c273c!important;
+    font-weight: 600!important;
+}
+
+table mat-form-field{
+    width: 80px;
+    margin-left: 16px;
+}
+
+.footer-block{
+    margin-bottom: 1rem;
+}
+
+.tab-content{
+    margin-top: 1rem;
+}
+
+.lensForm mat-form-field{
+    margin: 0.5rem;
+}
+
+.measurementsForm mat-form-field,
+.measurementsForm table{
+    margin: 0.5rem;
+}
+.measurementsForm table{
+    width: 85%;
+}
+.measurementsForm table mat-form-field{
+    width: 60%;
+}
+
+.mat-tab-body-content{
+    overflow: hidden;
+}
+
+.mat-radio-button {
+    border: 1px solid #eee !important;
+    padding: 5px!important;
+    width: 150px!important;
+}
+
+.lens-size-table mat-form-field{
+    width: 80%!important;
+}
+
+.precal-values-imaage{
+    width: 85%;
+}
+
+.button-group button{
+    margin-left: 1rem;
+}

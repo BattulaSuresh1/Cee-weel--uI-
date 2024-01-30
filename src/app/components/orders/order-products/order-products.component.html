@@ -1,0 +1,227 @@
+<div class="az-content">
+    <div class="container">
+        <div class="az-content-body d-flex flex-column">
+            <div class="az-content-title">
+                <div class="row mb-3">
+                    <div class="col">
+                      <button class="backButton" [routerLink]="['/customers']" mat-raised-button ><i class="typcn typcn-arrow-back"></i> Back</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="pd-15 bg-gray-200 m-b-5 forSearchFilter">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <mat-form-field>
+                                        <input type="text" [formControl]="filter" placeholder="Search" matInput>
+                                        <mat-error *ngIf="filter?.errors?.required">This field is required.</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <mat-drawer-container class="example-container">
+                    <mat-drawer #drawer mode="side" [opened]="true">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="container">
+                                    <div class="form-filter">
+                                        <form [formGroup]="productForm" #myForm="ngForm"
+                                            (ngSubmit)="productFormSubmit()">
+                                            <h3>Advance Filter</h3>
+                                            <hr>
+                                            <mat-form-field appearance="outline">
+                                                <mat-label>Item Type</mat-label>
+                                                <mat-select formControlName="item_type">
+                                                    <mat-option value="">All</mat-option>
+                                                    <mat-option *ngFor="let item_type of item_types;"
+                                                        value="{{ item_type?.name}} - ( {{ item_type?.key }} )">
+                                                        <span>{{ item_type?.name }} - ( {{ item_type?.key }} )</span>
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="formValidate?.item_type?.errors?.required">This field
+                                                    is required.</mat-error>
+                                                <mat-error *ngIf="formValidate?.item_type?.errors?.serverError"> {{
+                                                    formValidate?.item_type?.errors?.serverError }} </mat-error>
+                                                    
+                                            </mat-form-field>
+
+                                            <mat-form-field appearance="outline">
+                                                <mat-label>Brand</mat-label>
+                                                <mat-select formControlName="brand">
+                                                    <mat-option value="">All</mat-option>
+                                                    <mat-option *ngFor="let brand of brands;" [value]="brand?.id">
+                                                        <span>{{brand?.name}}</span>
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="formValidate?.brand?.errors?.required">This field is
+                                                    required.</mat-error>
+                                                <mat-error *ngIf="formValidate?.brand?.errors?.serverError"> {{
+                                                    formValidate?.brand?.errors?.serverError }} </mat-error>
+                                            </mat-form-field>
+
+
+                                            <mat-form-field appearance="outline">
+                                                <mat-label> RMI Type</mat-label>
+                                                <mat-select formControlName="rim_type">
+                                                    <mat-option value="">All</mat-option>
+                                                    <mat-option *ngFor="let rim_type of rim_types;" [value]="rim_type">
+                                                        <span>{{rim_type}}</span>
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="formValidate?.rim_type?.errors?.required">This field
+                                                    is required.</mat-error>
+                                                <mat-error *ngIf="formValidate?.rim_type?.errors?.serverError"> {{
+                                                    formValidate?.rim_type?.errors?.serverError }} </mat-error>
+                                            </mat-form-field>
+
+                                            <mat-form-field appearance="outline">
+                                                <mat-label> Collection Type</mat-label>
+                                                <mat-select formControlName="collection_type">
+                                                    <mat-option value="">All</mat-option>
+                                                    <mat-option *ngFor="let collection_type of collection_types;"
+                                                        [value]="collection_type?.id">
+                                                        <span>{{collection_type?.name}}</span>
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="formValidate?.collection_type?.errors?.required">This
+                                                    field is required.</mat-error>
+                                                <mat-error *ngIf="formValidate?.collection_type?.errors?.serverError">
+                                                    {{ formValidate?.collection_type?.errors?.serverError }}
+                                                </mat-error>
+                                            </mat-form-field>
+
+                                            <mat-form-field appearance="outline">
+                                                <mat-label> Material</mat-label>
+                                                <mat-select formControlName="material">
+                                                    <mat-option value="">All</mat-option>
+                                                    <mat-option *ngFor="let material of materials;"
+                                                        [value]="material?.id">
+                                                        <span>{{material?.name}}</span>
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="formValidate?.material?.errors?.required">This field
+                                                    is required.</mat-error>
+                                                <mat-error *ngIf="formValidate?.material?.errors?.serverError"> {{
+                                                    formValidate?.material?.errors?.serverError }} </mat-error>
+                                            </mat-form-field>
+
+                                            <mat-form-field appearance="outline">
+                                                <mat-label>Prescription Type</mat-label>
+                                                <mat-select formControlName="prescription_type">
+                                                    <mat-option value="">All</mat-option>
+                                                    <mat-option *ngFor="let prescription_type of prescription_types;"
+                                                        [value]="prescription_type?.id">
+                                                        <span>{{prescription_type?.name}}</span>
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error
+                                                    *ngIf="formValidate?.prescription_type?.errors?.required">This field
+                                                    is required.</mat-error>
+                                                <mat-error *ngIf="formValidate?.prescription_type?.errors?.serverError">
+                                                    {{ formValidate?.prescription_type?.errors?.serverError }}
+                                                </mat-error>
+                                            </mat-form-field>
+
+                                            <mat-form-field appearance="outline">
+                                                <mat-label>Frame Color</mat-label>
+                                                <mat-select formControlName="glass_color">
+                                                    <mat-option value="">All</mat-option>
+                                                    <mat-option *ngFor="let glass_color of glass_colors;"
+                                                        [value]="glass_color?.id">
+                                                        <span>{{glass_color?.name}}</span>
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="formValidate?.glass_color?.errors?.required">This
+                                                    field is required.</mat-error>
+                                                <mat-error *ngIf="formValidate?.glass_color?.errors?.serverError"> {{
+                                                    formValidate?.glass_color?.errors?.serverError }} </mat-error>
+                                            </mat-form-field>
+
+                                            <mat-form-field appearance="outline">
+                                                <mat-label>Frame Width</mat-label>
+                                                <mat-select formControlName="frame_width">
+                                                    <mat-option value="">All</mat-option>
+                                                    <mat-option *ngFor="let frame_width of frame_widths;"
+                                                        [value]="frame_width?.id">
+                                                        <span>{{frame_width?.name}}</span>
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="formValidate?.frame_width?.errors?.required">This
+                                                    field is required.</mat-error>
+                                                <mat-error *ngIf="formValidate?.frame_width?.errors?.serverError"> {{
+                                                    formValidate?.frame_width?.errors?.serverError }} </mat-error>
+                                            </mat-form-field>
+
+                                            <div class="footer-block text-center">
+                                                <div class="button-group">
+                                                    <button type="button" (click)="resetFilter()" mat-raised-button
+                                                        class="btn-int-blue">Reset</button>
+                                                    <button type="submit" mat-raised-button
+                                                        class="btn-int-blue m-l-5">Search</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                </div>
+                            </div><!-- az-sidebar -->
+                        </div>
+                    </mat-drawer>
+                    <mat-drawer-content>
+                        <main class="sidenav-content">
+                            <div class="main-content">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="toggleBtn">
+                                            <div>
+                                                <mat-icon (click)="drawer.toggle()">filter_alt</mat-icon>
+                                            </div>
+                                            <div>
+                                                Table View
+                                                <mat-slide-toggle [formControl]="toggle" name="toggle">
+                                                </mat-slide-toggle>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row" *ngIf="showView">  
+                                    <div class="col-lg-12">
+                                        <div class="product">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="product-items">
+                                                        <div class="product-list">Imagess</div>
+                                                        <div class="product-list">Name</div>
+                                                        <div class="product-list">Type</div>
+                                                        <div class="product-list">Description</div>
+                                                        <div class="product-list">Item Code</div>
+                                                        <div class="product-list">Price</div>
+                                                        <div class="product-list"> Buy</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <app-product *ngFor="let product of products;" [product]="product"
+                                            (productAdded)="addProductToCart($event)"></app-product>
+                                    </div>
+                                </div>
+
+                                <div class="row" *ngIf="!showView">
+                                    <div class="col-lg-4" *ngFor="let product of products;">
+                                        <app-grid-product [product]="product" (productAdded)="addProductToCart($event)">
+                                        </app-grid-product>
+                                    </div>
+                                </div>
+                            </div>
+                        </main>
+                    </mat-drawer-content>
+                </mat-drawer-container>
+
+            </div>
+        </div>
+    </div>
+</div>

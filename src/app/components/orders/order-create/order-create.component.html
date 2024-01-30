@@ -1,0 +1,137 @@
+<div class="az-content">
+    <div class="container">
+        <div class="az-content-body d-flex flex-column">
+            <div class="az-content-title">
+                <div class="row">
+                        <div class="col-lg-12">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <h1>Order Details</h1>
+                                    </div>
+                                    
+                                    <div class="justify-content-end" >
+                                        <a mat-raised-button  (click)="generatePdfLink()"  target="_blank" color="primary">Sales Order Copy </a>
+                                    </div>
+
+
+                                    <div class="col-md-4">
+                                        <button   *ngIf="balanceAmount === 0" mat-raised-button (click)="generateInvoice()" color="accent">
+                                            Generate Order Invoice
+                                        </button>
+                                        <button class="backButton" mat-raised-button (click)="goBack()">
+                                            <i class="typcn typcn-arrow-back"></i> Back
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <!-- <h3>Customer Information</h3> -->
+                                        <table class="table table-bordered">
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Email ID</th>
+                                                <th>Mobile Number</th>
+                                            </tr>
+                                            <tr>
+                                                <td> <p> {{ customer?.name }} </p></td>
+                                                <td> <p> {{ customer?.email }} </p></td>
+                                                <td> <p> {{ customer?.phone }} </p></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <table class="table thead-light">
+                                            <tr>
+                                                <th style="width: 40%" >Item</th>
+                                                <th style="width: 10%" >Price</th>
+                                                <th style="width: 20%" >Quantity</th>
+                                                <th class="text-right" style="width: 10%" >Discount</th>
+                                                <th class="text-right" style="width: 10%" >Subtotal</th>
+                                            </tr>
+
+                                            <tr *ngFor="let cart of orderItems;">
+                                                <td style="width: 40%">
+                                                    <div class="productDetails">
+                                                        <div class="productImg">
+                                                            <img  *ngIf="element?.images != null" src="{{SERVER_PATH}}/storage/{{cart?.product?.images}}" 
+                                                            alt="" 
+                                                            class="img" aria-hidden="false">
+                                                            <img *ngIf="element?.images == null"
+                                                            src="assets/images/blank-profile-picture.png" alt="" class="img" aria-hidden="false">
+                                                        </div>
+                                                    
+                                                        <div class="productDesc">
+                                                            <p>{{cart?.product?.name}}</p>
+                                                            <p> {{cart?.product?.item_type}}</p>
+                                                            <p>{{cart?.product?.item_description}}</p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 10%">
+                                                        <p>INR {{(cart?.product?.price) | number:'1.2-2'}}</p>
+                                                </td>
+                                                <td style="width: 20%">
+                                                    <p> {{cart?.quantities}}</p>
+                                                        
+                                                </td>
+                                                <td  class="text-right" style="width: 10%">
+                                                    <p>INR {{(cart?.discount) | number:'1.2-2'}}</p>
+                                                </td>
+                                                <td class="text-right" style="width: 10%">
+                                                    <p>INR {{(cart?.product?.price * cart?.quantities) | number:'1.2-2' }}</p>
+                                                </td>
+                                            </tr>
+
+                                           
+                                            <tr>
+                                                <td class="text-right" colspan="4"> Payment Type </td>
+                                                <td class="text-right"> {{
+                                                        ((order?.payment_type === '1')? 'CASH' : (order?.payment_type === '2')? 'UPI' : 'ONLINE')
+                                                        }}
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="text-right" colspan="4"> Payment Settlement </td>
+                                                <td class="text-right"> {{ ((order?.payment_settlement === '1')? 'Full Amount' : 'Advance Amount') }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-right" colspan="4"> Amount </td>
+                                                <td class="text-right"> INR {{ order?.amount | number:'1.2-2' }}</td>
+                                            </tr>
+
+                                            <ng-container *ngIf="orderPayments?.length > 0">
+                                                <tr *ngFor="let orderPayment of orderPayments;let i = index">
+                                                    <td class="text-right" colspan="3"> Paid Amount - {{ i+1 }} </td>
+                                                    <td class="text-right"> INR {{ orderPayment?.paid_amount | number:'1.2-2' }}</td>
+                                                    <td  class="text-right"> - </td>
+                                                </tr>
+                                                <tr>
+                                                        <td class="text-right" colspan="3"> Total Paid Amount </td>
+                                                        <td class="text-right"> INR {{ paidAmount | number:'1.2-2' }}</td>
+                                                        <td class="text-right"> INR {{ paidAmount | number:'1.2-2' }}</td>
+                                                </tr>
+                                            </ng-container>
+                                            <tr>
+                                                    <td class="text-right" colspan="4"> Balance Amount </td>
+                                                    <td class="text-right"> 
+                                                            INR {{ balanceAmount | number:'1.2-2' }}
+                                                    </td>
+                                                </tr>
+                                          
+                                        </table>
+                                    </div>
+                                </div>
+                            <app-order-place (updateEvent)="ngOnInit()"></app-order-place>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class='text-center'>
+    <button *ngIf="order?.order_status == 0 || order?.order_status == 1 " mat-raised-button (click)="cancelorder(orderId)" color="warn">Cancel Order </button>
+</div>

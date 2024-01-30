@@ -1,0 +1,158 @@
+
+<div class="az-content az-content-profile">
+    <div class="container mn-ht-100p">
+        <div class="az-content-left az-content-left-profile">
+            <div class="az-profile-overview">
+                <div class="profile-head">
+                <div class="az-img-user">
+                <!-- <img src="assets/images/img10.jpg" alt=""> -->
+                <img class="az-img-user" *ngIf="customer?.images != null" src="{{SERVER_PATH}}/storage/{{customer?.images}}" alt="">
+                <img class="az-img-user" *ngIf="customer?.images == null" src="assets/images/blank-profile-picture.png" alt="">
+                </div>
+            </div>
+            <hr class="mg-y-10">
+            <form [formGroup]="customerForm" #myForm="ngForm" (ngSubmit)="customerFormSubmit()">
+                <mat-form-field>
+                    <mat-label>Name</mat-label>
+                    <input type="text" formControlName="name" matInput>
+                    <mat-error *ngIf="formValidate?.name?.errors?.required">This field is required.</mat-error>
+                    <mat-error *ngIf="formValidate?.name?.errors?.serverError"> {{ formValidate?.name?.errors?.serverError }} </mat-error>
+                </mat-form-field>
+    
+                <mat-form-field>
+                    <mat-label>Email</mat-label>
+                    <input type="email" formControlName="email" matInput>
+                    <mat-error *ngIf="formValidate?.email?.errors?.required">This field is required.</mat-error>
+                    <mat-error *ngIf="formValidate?.email?.errors?.email">Please enter valid eamil.</mat-error>
+                    <mat-error *ngIf="formValidate?.email?.errors?.serverError"> {{ formValidate?.email?.errors?.serverError }} </mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Phone</mat-label>
+                    <input type="text" formControlName="phone" matInput>
+                    <mat-error *ngIf="formValidate?.phone?.errors?.required">This field is required.</mat-error>
+                    <mat-error *ngIf="formValidate?.phone?.errors?.serverError"> {{ formValidate?.phone?.errors?.serverError }} </mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Code</mat-label>
+                    <input type="text" formControlName="code" matInput>
+                    <mat-error *ngIf="formValidate?.code?.errors?.required">This field is required.</mat-error>
+                    <mat-error *ngIf="formValidate?.code?.errors?.serverError"> {{ formValidate?.code?.errors?.serverError }} </mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Profession</mat-label>
+                    <input type="text" formControlName="profession" matInput>
+                    <mat-error *ngIf="formValidate?.profession?.errors?.required">This field is required.</mat-error>
+                    <mat-error *ngIf="formValidate?.profession?.errors?.serverError"> {{ formValidate?.profession?.errors?.serverError }} </mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Alternate phone</mat-label>
+                    <input type="text" formControlName="alternate_phone" matInput>
+                    <mat-error *ngIf="formValidate?.alternate_phone?.errors?.required">This field is required.</mat-error>
+                    <mat-error *ngIf="formValidate?.alternate_phone?.errors?.serverError"> {{ formValidate?.alternate_phone?.errors?.serverError }} </mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Date Of Birth</mat-label>
+                    <input type="text" formControlName="date_of_birth" matInput>
+                    <mat-error *ngIf="formValidate?.date_of_birth?.errors?.required">This field is required.</mat-error>
+                    <mat-error *ngIf="formValidate?.date_of_birth?.errors?.serverError"> {{ formValidate?.date_of_birth?.errors?.serverError }} </mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Age</mat-label>
+                    <input type="age" formControlName="age" matInput>
+                    <mat-error *ngIf="formValidate?.age?.errors?.required">This field is required.</mat-error>
+                    <mat-error *ngIf="formValidate?.age?.errors?.serverError"> {{ formValidate?.age?.errors?.serverError }} </mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>DOA</mat-label>
+                    <input type="text" formControlName="doa" matInput>
+                    <mat-error *ngIf="formValidate?.doa?.errors?.required">This field is required.</mat-error>
+                    <mat-error *ngIf="formValidate?.doa?.errors?.serverError"> {{ formValidate?.doa?.errors?.serverError }} </mat-error>
+                </mat-form-field> 
+
+                <mat-form-field>
+                    <mat-label>Life Style</mat-label>
+                    <input type="text" formControlName="life_style" matInput>
+                    <mat-error *ngIf="formValidate?.life_style?.errors?.required">This field is required.</mat-error>
+                    <mat-error *ngIf="formValidate?.life_style?.errors?.serverError"> {{ formValidate?.life_style?.errors?.serverError }} </mat-error>
+                </mat-form-field>
+               
+                <mat-form-field>
+                    <mat-label>address</mat-label>
+                    <input type="text" formControlName="address" matInput>
+                    <mat-error *ngIf="formValidate?.address?.errors?.required">This field is required.</mat-error>
+                    <mat-error *ngIf="formValidate?.address?.errors?.serverError"> {{ formValidate?.address?.errors?.serverError }} </mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Nearby</mat-label>
+                    <input type="text" formControlName="nearby" matInput>
+                    <mat-error *ngIf="formValidate?.nearby?.errors?.required">This field is required.</mat-error>
+                    <mat-error *ngIf="formValidate?.nearby?.errors?.serverError"> {{ formValidate?.nearby?.errors?.serverError }} </mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                        <mat-label>City</mat-label>
+                    <input type="text" formControlName="city" matInput>
+                    <mat-error *ngIf="formValidate?.city?.errors?.required">This field is required.</mat-error>
+                    <mat-error *ngIf="formValidate?.city?.errors?.serverError"> {{ formValidate?.city?.errors?.serverError }} </mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>state</mat-label>
+                    <input type="text" formControlName="state" matInput>
+                    <mat-error *ngIf="formValidate?.state?.errors?.required">This field is required.</mat-error>
+                    <mat-error *ngIf="formValidate?.state?.errors?.serverError"> {{ formValidate?.state?.errors?.serverError }} </mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label> Country</mat-label>
+                    <mat-select formControlName="country_id">
+                        <mat-option *ngFor="let country of countries;" [value]="country?.id">
+                            <span>{{country?.name}}</span>
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="formValidate?.country_id?.errors?.required">This field is required.</mat-error>
+                    <mat-error *ngIf="formValidate?.country_id?.errors?.serverError"> {{ formValidate?.country_id?.errors?.serverError }} </mat-error>
+    
+                </mat-form-field>
+
+                <div class="footer-block text-center">
+                    <div class="button-group">
+                        <button type="submit" mat-raised-button class="btn-int-blue">{{ buttonText }} </button>
+                    </div>
+                </div>
+
+            </form>
+            </div>
+        </div>
+        <div class="az-content-body az-content-body-profile">
+             <div class="row">
+            <div class="buttoncol">
+              <button class="backButton" mat-raised-button [routerLink]="['/customers']"><i class="typcn typcn-arrow-back"></i> Back</button>
+            </div>
+        </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="button-group pull-right mg-l-10 mg-b-15">
+                        <button type="button" routerLink="/order-products"  class="btn-int-blue" mat-raised-button>Order items</button>
+                    </div>
+                </div>
+            </div>
+            <nav class="nav az-nav-line">
+                <a routerLink="overview" routerLinkActive="active" class="nav-link">Overview</a>
+                <a routerLink="visits" routerLinkActive="active" class="nav-link">Previous Visits</a>
+                <a routerLink="orders" routerLinkActive="active" class="nav-link">Previous Orders</a>
+            </nav>
+            <div class="az-profile-body">
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+    </div>
+</div>

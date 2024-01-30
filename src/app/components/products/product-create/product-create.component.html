@@ -1,0 +1,209 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <h3 class="modal-title">{{buttonText}} Product</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cancel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <form [formGroup]="productForm" #myForm="ngForm" (ngSubmit)="productFormSubmit()">
+
+            <mat-form-field>
+                <mat-label>Name</mat-label>
+                <input type="text" formControlName="name" matInput>
+                <mat-error *ngIf="formValidate?.name?.errors?.required">This field is required.</mat-error>
+                <mat-error *ngIf="formValidate?.name?.errors?.serverError"> {{ formValidate?.name?.errors?.serverError
+                    }} </mat-error>
+            </mat-form-field>
+
+             <mat-form-field class="example-full-width">
+              <mat-label> Brand</mat-label>
+              <input type="hidden" formControlName="brand">
+              <input  matInput placeholder="Create Brand Or Choose Your Brand" aria-label="Brand" [matAutocomplete]="auto" [formControl]="itemCtrl" (keyup.enter)="addOption()">
+              <mat-error *ngIf="formValidate?.brand?.errors?.required">This field is required.</mat-error>
+              <mat-error *ngIf="formValidate?.brand?.errors?.serverError"> {{ formValidate?.brand?.errors?.serverError}} </mat-error>
+              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="optionSelected($event.option)">
+                <mat-option *ngFor="let item of items;" [value]="item">
+                  <span>{{ item.name }}</span>
+                </mat-option>
+              </mat-autocomplete>
+              <button *ngIf="showAddButton && itemCtrl.value" matSuffix mat-button mat-icon-button (click)="addOption()"><mat-icon matTooltip='Add "{{itemCtrl.value}}"'>add</mat-icon></button>
+              <mat-error *ngIf="formValidate?.brand?.errors?.required">This field is required.</mat-error>
+              <mat-error *ngIf="formValidate?.brand?.errors?.serverError"> {{ formValidate?.brand?.errors?.serverError
+                  }} </mat-error>
+            </mat-form-field>
+
+
+            <mat-form-field>
+                <mat-label>Item Type</mat-label>
+                <mat-select formControlName="item_type" >
+                    <mat-option *ngFor="let item_type of item_types;"
+                        value="{{ item_type?.name}} - ( {{ item_type?.key }} )">
+                        <span>{{ item_type?.name }} - ( {{ item_type?.key }} )</span>
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="formValidate?.item_type?.errors?.required">This field is required.</mat-error>
+                <mat-error *ngIf="formValidate?.item_type?.errors?.serverError"> {{
+                    formValidate?.item_type?.errors?.serverError }} </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Item Code</mat-label>
+                <input type="text" formControlName="item_code" matInput>
+                <mat-error *ngIf="formValidate?.item_code?.errors?.required">This field is required.</mat-error>
+                <mat-error *ngIf="formValidate?.item_code?.errors?.item_code">Please enter valid Item Code.</mat-error>
+                <mat-error *ngIf="formValidate?.item_code?.errors?.serverError"> {{
+                    formValidate?.item_code?.errors?.serverError }} </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Item Description</mat-label>
+                <textarea matInput formControlName="item_description"></textarea>
+                <mat-error *ngIf="formValidate?.item_description?.errors?.required">This field is required.</mat-error>
+                <mat-error *ngIf="formValidate?.item_description?.errors?.serverError"> {{
+                    formValidate?.item_description?.errors?.serverError }} </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Price</mat-label>
+                <input type="number" formControlName="price" min="1" matInput>
+                <mat-error *ngIf="formValidate?.price?.errors?.required">This field is required.</mat-error>
+                <!-- <mat-error *ngIf="formValidate?.price?.errors?.pattern">Please enter valid price</mat-error> -->
+                <mat-error *ngIf="formValidate?.price?.errors?.serverError"> {{ formValidate?.price?.errors?.serverError
+                    }} </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Discount</mat-label>
+                <input type="number" formControlName="discount" min="0" max="100" matInput>
+                <mat-error *ngIf="formValidate?.discount?.errors?.required">  Discount should be between 0 and 100.</mat-error>
+                <mat-error *ngIf="formValidate?.discount?.errors?.serverError"> {{ formValidate?.discount?.errors?.serverError
+                    }} </mat-error>
+                <mat-error *ngIf="formValidate.discount.errors?.min || formValidate.discount.errors?.max">
+                    Discount should be between 0 and 100.
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Model</mat-label>
+                <input type="text" formControlName="model" matInput>
+                <mat-error *ngIf="formValidate?.model?.errors?.required">This field is required.</mat-error>
+                <mat-error *ngIf="formValidate?.model?.errors?.serverError"> {{ formValidate?.model?.errors?.serverError
+                    }} </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Color</mat-label>
+                <mat-select  formControlName="color">
+                    <mat-option *ngFor="let color of colors;" [value]="color?.id">
+                        <sapn>{{color?.name}}</sapn>
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="formValidate?.color?.errors?.required">This field is required.</mat-error>
+                <mat-error *ngIf="formValidate?.color?.errors?.serverError"> {{ formValidate?.color?.errors?.serverError
+                    }} </mat-error>
+            </mat-form-field>
+
+            <mat-form-field >
+                <mat-label>Size</mat-label>
+                <input type="text" formControlName="size" matInput  >
+                <mat-error *ngIf="formValidate?.size?.errors?.required">This field is required.</mat-error>
+                <mat-error *ngIf="formValidate?.size?.errors?.serverError"> {{ formValidate?.size?.errors?.serverError
+                    }} </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label> RMI Type</mat-label>
+                <mat-select formControlName="rim_type" >
+                    <mat-option *ngFor="let rim_type of rim_types;" [value]="rim_type">
+                        <span>{{rim_type}}</span>
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="formValidate?.rim_type?.errors?.required">This field is required.</mat-error>
+                <mat-error *ngIf="formValidate?.rim_type?.errors?.serverError"> {{
+                    formValidate?.rim_type?.errors?.serverError }} </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label> Collection Type</mat-label>
+                <mat-select formControlName="collection_type">
+                    <mat-option *ngFor="let collection_type of collection_types;" [value]="collection_type?.id">
+                        <span>{{collection_type?.name}}</span>
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="formValidate?.collection_type?.errors?.required">This field is required.</mat-error>
+                <mat-error *ngIf="formValidate?.collection_type?.errors?.serverError"> {{
+                    formValidate?.collection_type?.errors?.serverError }} </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label> Material</mat-label>
+                <mat-select formControlName="material">
+                    <mat-option *ngFor="let material of materials;" [value]="material?.id">
+                        <span>{{material?.name}}</span>
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="formValidate?.material?.errors?.required">This field is required.</mat-error>
+                <mat-error *ngIf="formValidate?.material?.errors?.serverError"> {{
+                    formValidate?.material?.errors?.serverError }} </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Prescription Type</mat-label>
+                <mat-select formControlName="prescription_type"  >
+                    <mat-option *ngFor="let prescription_type of prescription_types;" [value]="prescription_type?.id">
+                        <span>{{prescription_type?.name}}</span>
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Glass Color</mat-label>
+                <mat-select formControlName="glass_color" >
+                    <mat-option *ngFor="let glass_color of glass_colors;" [value]="glass_color?.id">
+                        <span>{{glass_color?.name}}</span>
+                    </mat-option>
+                </mat-select>
+                 <mat-error *ngIf="formValidate?.glass_color?.errors?.required">This field is required.</mat-error>
+                <mat-error *ngIf="formValidate?.glass_color?.errors?.serverError"> {{
+                    formValidate?.glass_color?.errors?.serverError }} </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Frame Width</mat-label>
+                <mat-select formControlName="frame_width">
+                    <mat-option *ngFor="let frame_width of frame_widths;" [value]="frame_width?.id">
+                        <span>{{frame_width?.name}}</span>
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Catalog No</mat-label>
+                <input type="text" formControlName="catalog_no" matInput>
+                <mat-error *ngIf="formValidate?.catalog_no?.errors?.required">This field is required.</mat-error>
+                <mat-error *ngIf="formValidate?.catalog_no?.errors?.serverError"> {{
+                    formValidate?.catalog_no?.errors?.serverError }} </mat-error>
+            </mat-form-field>
+
+
+            <mat-form-field>
+              <mat-label>BarCode</mat-label>
+              <input type="number" formControlName="barcode" matInput>
+              <mat-error *ngIf="formValidate?.barcode?.errors?.required">This field is required.</mat-error>
+              <mat-error *ngIf="formValidate?.barcode?.errors?.serverError"> {{ formValidate?.barcode?.errors?.serverError
+                  }} </mat-error>
+          </mat-form-field>
+
+            <app-file-upload requiredFileType="image/png" [uploadType]="uploadType"
+                (fileUploaded)="addAttachment($event)"></app-file-upload>
+
+            <div class="footer-block text-center">
+                <div class="button-group">
+                    <button type="submit" mat-raised-button class="btn-int-blue">{{ buttonText }} </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

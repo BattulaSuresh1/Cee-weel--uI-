@@ -1,0 +1,12 @@
+
+<div class="az-body az-body-sidebar">
+    <app-side-nav *ngIf="showHeader"></app-side-nav>
+    <div class="az-content az-content-dashboard-two">
+      <app-header *ngIf="showHeader"></app-header>
+      <div class="az-content-wrapper">
+        <router-outlet></router-outlet>
+      </div>
+      <!-- <app-footer *ngIf="showFooter"></app-footer> -->
+    </div>
+  </div>
+  <app-loader></app-loader>

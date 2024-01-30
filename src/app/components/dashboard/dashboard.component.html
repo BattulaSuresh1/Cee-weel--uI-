@@ -1,0 +1,319 @@
+<div class="az-content-header d-block d-md-flex">
+  <div>
+    <h2 class="az-content-title tx-24 mg-b-5 mg-b-lg-8">Hi, welcome back!</h2>
+    <p class="mg-b-0">Your sales monitoring dashboard template.</p>
+  </div>
+  <div class="az-dashboard-header-right">
+    <div>
+      <label class="tx-13">Customer Ratings</label>
+      <div class="az-star">
+        <i class="typcn typcn-star active"></i>
+        <i class="typcn typcn-star active"></i>
+        <i class="typcn typcn-star active"></i>
+        <i class="typcn typcn-star active"></i>
+        <i class="typcn typcn-star"></i>
+        <span>(12,775)</span>
+      </div>
+    </div>
+    <div>
+      <label class="tx-13">Customers in store</label>
+      <h5 class="cursorPointer" (click)="scroll(customerTable)">{{customersInStore}}</h5>
+    </div>
+    <div>
+      <label class="tx-13">All Sales (Online)</label>
+      <h5>431,007</h5>
+    </div>
+    <div>
+      <label class="tx-13">All Sales (Offline)</label>
+      <h5>932,210</h5>
+    </div>
+  </div><!-- az-dashboard-header-right -->
+</div><!-- az-content-header -->
+<div class="az-content-body">
+
+  <div class="card card-dashboard-seven">
+    <div class="card-header">
+      <div class="row row-sm">
+        <div class="col-6 col-md-4 col-xl">
+          <div class="media">
+            <div><i class="icon ion-ios-calendar"></i></div>
+            <div class="media-body">
+              <label>Start Date</label>
+              <div class="date">
+                <span>Sept 01, 2018</span> <a href="#" (click)="$event.preventDefault()"><i
+                    class="icon ion-md-arrow-dropdown"></i></a>
+              </div>
+            </div>
+          </div><!-- media -->
+        </div>
+        <div class="col-6 col-md-4 col-xl">
+          <div class="media">
+            <div><i class="icon ion-ios-calendar"></i></div>
+            <div class="media-body">
+              <label>End Date</label>
+              <div class="date">
+                <span>Sept 30, 2018</span> <a href="#" (click)="$event.preventDefault()"><i
+                    class="icon ion-md-arrow-dropdown"></i></a>
+              </div>
+            </div>
+          </div><!-- media -->
+        </div>
+        <div class="col-6 col-md-4 col-xl mg-t-15 mg-md-t-0">
+          <div class="media">
+            <div><i class="icon ion-logo-usd"></i></div>
+            <div class="media-body">
+              <label>Sales Measure</label>
+              <div class="date">
+                <span>Revenue</span> <a href="#" (click)="$event.preventDefault()"><i
+                    class="icon ion-md-arrow-dropdown"></i></a>
+              </div>
+            </div>
+          </div><!-- media -->
+        </div>
+        <div class="col-6 col-md-4 col-xl mg-t-15 mg-xl-t-0">
+          <div class="media">
+            <div><i class="icon ion-md-person"></i></div>
+            <div class="media-body">
+              <label>Customer Type</label>
+              <div class="date">
+                <span>All Customers</span> <a href="#" (click)="$event.preventDefault()"><i
+                    class="icon ion-md-arrow-dropdown"></i></a>
+              </div>
+            </div>
+          </div><!-- media -->
+        </div>
+        <div class="col-md-4 col-xl mg-t-15 mg-xl-t-0">
+          <div class="media">
+            <div><i class="icon ion-md-stats"></i></div>
+            <div class="media-body">
+              <label>Transaction Type</label>
+              <div class="date">
+                <span>All Transactions</span> <a href="#" (click)="$event.preventDefault()"><i
+                    class="icon ion-md-arrow-dropdown"></i></a>
+              </div>
+            </div>
+          </div><!-- media -->
+        </div>
+      </div><!-- row -->
+    </div><!-- card-header -->
+    <div class="card-body">
+      <div class="row row-sm">
+        <div class="col-6 col-lg-3">
+          <label class="az-content-label">Total Quantity</label>
+          <h2>110,000</h2>
+          <div class="desc up">
+            <i class="icon ion-md-stats"></i>
+            <span><strong>2.00%</strong> (30 days)</span>
+          </div>
+          <div class="compositeline-chart">
+            <canvas baseChart height="30" [chartType]="'line'" [datasets]="compositeLineChartData1"
+              [labels]="compositeLineChartLabels" [options]="compositeLineChartOptions"
+              [colors]="compositeLineChartColors"></canvas>
+          </div>
+        </div><!-- col -->
+        <div class="col-6 col-lg-3">
+          <label class="az-content-label">Total Cost</label>
+          <h2><span>INR </span>523,200</h2>
+          <div class="desc up">
+            <i class="icon ion-md-stats"></i>
+            <span><strong>12.09%</strong> (30 days)</span>
+          </div>
+          <div class="compositeline-chart">
+            <canvas baseChart height="30" [chartType]="'line'" [datasets]="compositeLineChartData2"
+              [labels]="compositeLineChartLabels" [options]="compositeLineChartOptions"
+              [colors]="compositeLineChartColors"></canvas>
+          </div>
+        </div><!-- col -->
+        <div class="col-6 col-lg-3 mg-t-20 mg-lg-t-0">
+          <label class="az-content-label">Total Revenue</label>
+          <h2><span>INR </span>753,098</h2>
+          <div class="desc down">
+            <i class="icon ion-md-stats"></i>
+            <span><strong>0.51%</strong> (30 days)</span>
+          </div>
+          <div class="compositeline-chart">
+            <canvas baseChart height="30" [chartType]="'line'" [datasets]="compositeLineChartData3"
+              [labels]="compositeLineChartLabels" [options]="compositeLineChartOptions"
+              [colors]="compositeLineChartColors"></canvas>
+          </div>
+        </div><!-- col -->
+        <div class="col-6 col-lg-3 mg-t-20 mg-lg-t-0">
+          <label class="az-content-label">Total Profit</label>
+          <h2><span>INR </span>331,886</h2>
+          <div class="desc up">
+            <i class="icon ion-md-stats"></i>
+            <span><strong>5.32%</strong> (30 days)</span>
+          </div>
+          <div class="compositeline-chart">
+            <canvas baseChart height="30" [chartType]="'line'" [datasets]="compositeLineChartData4"
+              [labels]="compositeLineChartLabels" [options]="compositeLineChartOptions"
+              [colors]="compositeLineChartColors"></canvas>
+          </div>
+        </div><!-- col -->
+      </div><!-- row -->
+    </div><!-- card-body -->
+  </div><!-- card -->
+
+  <div class="row row-sm mg-b-15 mg-sm-b-20">
+    <div class="col-lg-6 col-xl-7">
+      <div class="card card-dashboard-six">
+        <div class="card-header">
+          <div>
+            <label class="az-content-label">This Year's Total Revenue</label>
+            <span class="d-block">Sales Performance for Online and Offline Revenue</span>
+          </div>
+          <div class="chart-legend">
+            <div><span>Online Revenue</span> <span class="bg-indigo"></span></div>
+            <div><span>Offline Revenue</span> <span class="bg-teal"></span></div>
+          </div>
+        </div><!-- card-header -->
+        <div>
+          <canvas baseChart [chartType]="'bar'" [datasets]="yearsRevenueChartData" [labels]="yearsRevenueChartLabels"
+            [options]="yearsRevenueChartOptions" [colors]="yearsRevenueChartColors"></canvas>
+        </div>
+      </div><!-- card -->
+    </div><!-- col -->
+    <div class="col-lg-6 col-xl-5 mg-t-20 mg-lg-t-0">
+      <div class="card card-dashboard-map-one">
+        <label class="az-content-label">Sales Revenue by Customers</label>
+        <span class="d-block mg-b-20">Sales Performance of all states in the United States</span>
+        <mgl-map [style]="style" [zoom]="[.1]">
+        </mgl-map>
+      </div><!-- card -->
+    </div><!-- col -->
+  </div><!-- row -->
+
+  <div class="row row-sm mg-b-20 mg-lg-b-20">
+    <div class="col-md-6 col-xl-7">
+      <div class="card card-table-two">
+        <h6 class="card-title">Your Most Recent Earnings</h6>
+        <span class="d-block mg-b-20">This is your most recent earnings for today's date.</span>
+        <div class="table-responsive">
+          <table class="table table-striped table-dashboard-two">
+            <thead>
+              <tr>
+                <th class="wd-lg-25p">Date</th>
+                <th class="wd-lg-25p tx-right">Sales Count</th>
+                <th class="wd-lg-25p tx-right">Earnings</th>
+                <th class="wd-lg-25p tx-right">Tax Witheld</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>05 Oct 2018</td>
+                <td class="tx-right tx-medium tx-inverse">25</td>
+                <td class="tx-right tx-medium tx-inverse">INR 380.50</td>
+                <td class="tx-right tx-medium tx-danger">-INR 23.50</td>
+              </tr>
+              <tr>
+                <td>04 Oct 2018</td>
+                <td class="tx-right tx-medium tx-inverse">34</td>
+                <td class="tx-right tx-medium tx-inverse">INR 503.20</td>
+                <td class="tx-right tx-medium tx-danger">-INR 13.45</td>
+              </tr>
+              <tr>
+                <td>03 Oct 2018</td>
+                <td class="tx-right tx-medium tx-inverse">30</td>
+                <td class="tx-right tx-medium tx-inverse">INR 489.65</td>
+                <td class="tx-right tx-medium tx-danger">-INR 20.98</td>
+              </tr>
+              <tr>
+                <td>02 Oct 2018</td>
+                <td class="tx-right tx-medium tx-inverse">27</td>
+                <td class="tx-right tx-medium tx-inverse">INR 421.80</td>
+                <td class="tx-right tx-medium tx-danger">-INR 22.22</td>
+              </tr>
+              <tr>
+                <td>01 Oct 2018</td>
+                <td class="tx-right tx-medium tx-inverse">31</td>
+                <td class="tx-right tx-medium tx-inverse">INR 518.60</td>
+                <td class="tx-right tx-medium tx-danger">-INR 23.01</td>
+              </tr>
+            </tbody>
+          </table>
+        </div><!-- table-responsive -->
+      </div><!-- card-dashboard-five -->
+    </div>
+    <div class="col-md-6 col-xl-5 mg-t-20 mg-md-t-0">
+      <div class="card card-dashboard-eight">
+        <h6 class="card-title">Your Top Countries</h6>
+        <span class="d-block mg-b-20">Sales performance revenue based by country</span>
+
+        <div class="list-group">
+          <div class="list-group-item">
+            <i class="flag-icon flag-icon-us flag-icon-squared"></i>
+            <p>United States</p>
+            <span>INR 1,671.10</span>
+          </div><!-- list-group-item -->
+          <div class="list-group-item">
+            <i class="flag-icon flag-icon-nl flag-icon-squared"></i>
+            <p>Netherlands</p>
+            <span>INR 1,064.75</span>
+          </div><!-- list-group-item -->
+          <div class="list-group-item">
+            <i class="flag-icon flag-icon-gb flag-icon-squared"></i>
+            <p>United Kingdom</p>
+            <span>INR 1,055.98</span>
+          </div><!-- list-group-item -->
+          <div class="list-group-item">
+            <i class="flag-icon flag-icon-ca flag-icon-squared"></i>
+            <p>Canada</p>
+            <span>INR 1,045.49</span>
+          </div><!-- list-group-item -->
+          <div class="list-group-item">
+            <i class="flag-icon flag-icon-au flag-icon-squared"></i>
+            <p>Australia</p>
+            <span>INR 1,042.00</span>
+          </div><!-- list-group-item -->
+        </div><!-- list-group -->
+      </div><!-- card -->
+    </div><!-- col -->
+  </div><!-- row -->
+
+  <div class="row row-sm mg-b-20 mg-lg-b-0" #customerTable>
+    <div class="col-md-12 col-xl-12">
+      <div class="card card-table-two">
+        <h6 class="card-title">Customers</h6>
+        <div class="table-responsive mg-t-20">
+          <table class="table table-striped table-dashboard-two">
+            <thead>
+              <tr>
+                <th class="wd-lg-25p">Image</th>
+                <th class="wd-lg-25p tx-right">Customer Name</th>
+                <th class="wd-lg-25p tx-right">Mobile Number</th>
+                <th class="wd-lg-25p tx-right">Last Product Purchased</th>
+                <th class="wd-lg-25p tx-right">Age</th>
+                <th class="wd-lg-25p tx-right">Gender</th>
+                <th class="wd-lg-25p tx-right">Lifestyle</th>
+                <th class="wd-lg-25p tx-right">Emotion</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="cursorPointer" *ngFor="let visit of visits;let i=index;"
+                [routerLink]="['/customer',visit?.id]">
+                <td>
+                  <!-- <img class="az-img-user" src="assets/images/{{visit?.image}}" alt=""> -->
+                  <img class="az-img-user" *ngIf="visit?.images != null" src="{{SERVER_PATH}}/storage/{{visit?.images}}"
+                    alt="">
+                  <img class="az-img-user" *ngIf="visit?.images == null" src="assets/images/blank-profile-picture.png"
+                    alt="">
+                </td>
+                <td class="tx-right tx-medium">
+                  {{ visit?.name}}
+                </td>
+                <td class="tx-right tx-medium">{{ visit?.phone}}</td>
+                <td class="tx-right tx-medium">{{ visit?.brand_purchased}}</td>
+                <td class="tx-right tx-medium">{{ visit?.age}}</td>
+                <td class="tx-right tx-medium">{{ visit?.gender}}</td>
+                <td class="tx-right tx-medium">{{ visit?.life_style}}</td>
+                <td class="tx-right tx-medium">{{ visit?.emotion}}</td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div><!-- table-responsive -->
+      </div><!-- card-dashboard-five -->
+    </div>
+
+  </div><!-- row -->
+</div><!-- az-content-body -->

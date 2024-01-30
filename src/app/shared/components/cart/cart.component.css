@@ -1,0 +1,43 @@
+.az-content-title {
+    font-size: 14px;
+}
+app-cart-item {
+    display: contents;
+}
+table {
+    table-layout: fixed;
+    word-wrap: break-word;
+}
+th{
+    background: #eeeeee;
+}
+td{
+    color: #7987a1 !important;
+}
+
+.checkout{
+    background: #eeeeee;
+    padding: 1rem;
+}
+
+/* .checkouts{
+    background: #eeeeee;
+    padding: 1rem;
+    flex: 0%;
+} */
+
+.checkout h2{
+    margin-bottom: 0px;
+}
+
+.checkout p {
+    margin-top: 14px;
+    margin-bottom: 0px;
+}
+
+.mat-dialog-container{
+    overflow: hidden;
+}
+.backButton{
+    margin: 1rem;
+}

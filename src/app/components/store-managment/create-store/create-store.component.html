@@ -1,0 +1,33 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <h3 class="modal-title">{{ btnText }} Store</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cancel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <form [formGroup]="storeForm" #myForm="ngForm" (ngSubmit)="storeFormSubmit()">
+
+            <mat-form-field>
+                <mat-label>Name</mat-label>
+                <input type="text" formControlName="name" matInput>
+                <mat-error *ngIf="formValidate?.name?.errors?.required">This field is required.</mat-error>
+                <mat-error *ngIf="formValidate?.name?.errors?.serverError"> {{ formValidate?.name?.errors?.serverError }} </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Address</mat-label>
+                <input type="text" formControlName="address" matInput>
+                <mat-error *ngIf="formValidate?.address?.errors?.required">This field is required.</mat-error>
+                <mat-error *ngIf="formValidate?.address?.errors?.serverError"> {{ formValidate?.address?.errors?.serverError }} </mat-error>
+            </mat-form-field>
+
+            <div class="footer-block text-center">
+                <div class="button-group">
+                    <button type="submit" mat-raised-button class="btn-int-blue"> {{ btnText }} </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

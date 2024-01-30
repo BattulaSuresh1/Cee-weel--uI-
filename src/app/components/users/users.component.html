@@ -1,0 +1,88 @@
+<div class="az-content">
+    <div class="container">
+        <div class="az-content-body d-flex flex-column">
+            <div class="az-content-title">
+                <div class="row table-toolbar">
+                    <div class="col-lg-4 col-md-12 col-sm-12">
+                        <div class="advancedSearch">
+                            <button type="button" mat-raised-button>
+                                <span><mat-icon svgIcon="filter"></mat-icon></span>
+                                <span>Advanced Search</span>
+                            </button>
+                        </div>
+
+                    </div>
+                    <div class="col-lg-6 col-md-12 col-sm-12">
+                        <mat-paginator *appPermissions="[['USER_LIST']]" #paginator [length]="page_length"
+                            [pageSize]="items_per_page" [pageSizeOptions]="PAGE_SIZE_OPTIONS_DATA"
+                            (page)="pageChanged($event)"></mat-paginator>
+                    </div>
+                    <div class="col-lg-2 col-md-12 col-sm-12">
+                        <div class="button-group">
+                            <button type="button" *appPermissions="[['USER_CREATE']]" (click)="createUser()"
+                                class="btn-int-blue" mat-raised-button>Create User</button>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="pd-15 bg-gray-200 forSearchFilter">
+                    <div  class="row">
+                        <div  class="col-md-10">
+                            <mat-form-field>
+                                <input type="text" [formControl]="filter" placeholder="Search" matInput>
+                                <mat-error *ngIf="filter?.errors?.required">This field is required.</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div  class="col-md-2 text-right">
+                            <button type="button" (click)="advancedFilter()" class="mat-focus-indicator btn-int-blue mat-raised-button mat-button-base ng-star-inserted">Search</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                    <div class="mat-table-responsive">
+                        <table class="table dataTable " *appPermissions="[['USER_LIST']]" mat-table
+                            [dataSource]="dataSource">
+
+                            <ng-container matColumnDef="name">
+                                <th mat-header-cell *matHeaderCellDef> Name </th>
+                                <td mat-cell *matCellDef="let element"> {{element?.name}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="email">
+                                <th mat-header-cell *matHeaderCellDef> Email </th>
+                                <td mat-cell *matCellDef="let element"> {{element?.email}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="role_name">
+                                <th mat-header-cell *matHeaderCellDef> Role </th>
+                                <td mat-cell *matCellDef="let element"> {{element?.role?.name}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="actions">
+                                <th class="forActions" mat-header-cell *matHeaderCellDef> Actions </th>
+                                <td class="forActions" mat-cell *matCellDef="let element">
+                                    <button mat-icon-button (click)="edit(element?.id)"
+                                        *appPermissions="[['USER_VIEW']]"> <mat-icon>edit</mat-icon></button>
+                                    <button mat-icon-button (click)="delete(element?.id)"
+                                        *appPermissions="[['USER_DELETE']]"> <mat-icon>delete</mat-icon></button>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+                        <ng-container *ngIf="dataSource?.filteredData?.length == 0">
+                            <div class="row forNoRecords">
+                                <h3 class="table-no-date"> No Record found</h3>
+                            </div>
+                        </ng-container>
+                        <app-table-loader></app-table-loader>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,15 @@
+.profile-head{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.buttoncol{
+    text-align: right;
+    margin: 1rem;
+    padding: 1rem;
+    justify-content: flex-end ;
+}
+.button{
+    text-align: right;
+    justify-content: flex-end ;
+}

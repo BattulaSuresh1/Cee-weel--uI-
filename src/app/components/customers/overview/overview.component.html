@@ -1,0 +1,204 @@
+<div class="row mg-b-20">
+    <div class="col-md-12 col-xl-12">
+        <div class="">
+            <label class="az-content-label ">Last Five Visits</label>
+            <div class="table-responsive mg-t-20">
+                <table class="table table-bordered  ">
+                <thead>
+                    <tr>
+                    <th class="wd-lg-25p">Image</th>
+                    <th class="wd-lg-25p">Visit Date</th>
+                    <th class="wd-lg-25p">Time Spent</th>
+                    <th class="wd-lg-25p">Time Entry</th>
+                    <th class="wd-lg-25p">Time Exit</th>
+                    <th class="wd-lg-25p">Entry Emotion</th>
+                    <th class="wd-lg-25p">Exit Emotion</th>
+                    <th class="wd-lg-25p">Brand Purchased</th>
+                    <th class="wd-lg-25p">Order Vale</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let visit of visits;let i=index;">
+                        <td>
+                            <img class="az-img-user" *ngIf="visit?.image != null" src="{{SERVER_PATH}}/storage/{{visit?.image}}" alt="">
+                            <img class="az-img-user" *ngIf="visit?.image == null" src="assets/images/blank-profile-picture.png" alt="">
+                        </td>
+                        <td class="tx-medium"> {{ visit?.visit_date | date:"MM/dd/yy"}}  </td>
+                        <td class="tx-medium">{{ visit?.time_spent }}</td>
+                        <td class="tx-medium">{{ visit?.time_exit }}</td>
+                        <td class="tx-medium">{{ visit?.time_exit }}</td>
+                        <td class="tx-medium">{{ visit?.entry_emotion}}</td>
+                        <td class="tx-medium">{{ visit?.exit_emotion}}</td>
+                        <td class="tx-medium">{{ visit?.brand_purchased}}</td>
+                        <td class="tx-medium">INR {{ visit?.order_value}}</td>
+                    </tr>
+                
+                </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mg-b-20">
+    <div class="col-md-12 col-xl-12">
+        <div class="">
+            <label class="az-content-label ">Last Prescriptions</label>
+            <div class="row ">
+                <div class="button-group mg-l-10 mg-b-15">
+                    <button type="button"  (click)="createPrescription()" class="btn-int-blue" mat-raised-button>Add Prescriptions</button>
+                </div>
+            </div>
+            <mat-tab-group>
+                <mat-tab  label="Ophthalmic Lens"> 
+                    <div class="row">
+                        <div class="col-md-12 col-xl-12">
+                            <div class="table-responsive mg-t-20">
+                                <table class="table table-bordered  ">
+                                    <tbody>
+                                        <tr *ngFor="let prescription of prescriptionsOphthalmicLens;let i=index;" >
+                                            <mat-accordion class="example-headers-align" multi>
+                                                    <mat-expansion-panel [expanded]="i == 0">
+                                                        <mat-expansion-panel-header>
+                                                            <mat-panel-title>
+                                                            #LENS000{{prescription?.id}} ( {{ prescription?.created_at | date: "dd-MM-yyyy ',' HH:mm a"}} )
+                                                            </mat-panel-title>
+                                                            <mat-panel-description>
+                                                               <div>
+                                                                    Prescription By  <b>{{prescription?.given_by}} - Valid until {{prescription?.validity}}</b>
+                                                               </div>
+                                                            </mat-panel-description>
+                                                        </mat-expansion-panel-header>
+                                                            <div class="row">
+                                                                <div class="col-xl-12">
+                                                                    <table  class="table table-bordered mg-b-0">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th> <span class="tx-danger">*</span></th>
+                                                                                <th>Category</th>
+                                                                                <th>SPH</th>
+                                                                                <th>CYL</th>
+                                                                                <th>AXIS</th>
+                                                                                <th>PRISM</th>
+                                                                                <th>ADD</th>
+                                                                                <th>PD</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <tr *ngFor="let lens of prescription?.lenspower;let i=index;">
+                                                                                <td>{{ (lens?.eye_type == 'right_eye')? "Right Eye" : "Left Eye" }}</td>
+                                                                                <td>{{ (lens?.category != null)? lens?.category : "-"  }}</td>
+                                                                                <td>{{ (lens?.sph != null)? lens?.sph : "-" }}</td>
+                                                                                <td>{{ (lens?.cyl != null)? lens?.cyl : "-" }}</td>
+                                                                                <td>{{ (lens?.axis != null)? lens?.axis : "-" }}</td>
+                                                                                <td>{{ (lens?.prism != null)? lens?.prism : "-" }}</td>
+                                                                                <td>{{ (lens?.add != null)? lens?.add : "-" }}</td>                                                                             
+                                                                                <td>{{ (lens?.pd != null)? lens?.pd : "-" }}</td> 
+                                                                            </tr>
+                                                                        </tbody>
+                                                                        <br>
+                                                                        <div class="footer-block" >
+                                                                            <div class="button-group mg-l-10 mg-b-15">
+                                                                                <button class="footer-block text-align" type="button"   (click)="createPrescription(prescription)"    mat-raised-button> View (Or) Edit Prescription </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-xl-12">
+                                                                Remarks:   {{prescription?.remarks}}
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-xl-12">
+                                                                    attachment:   <a target="_blank" href="{{SERVER_PATH}}/storage/{{prescription?.attachment}}">{{prescription?.attachment}}</a>
+                                                                </div>
+                                                            </div>
+                                                        </mat-expansion-panel>
+                                            </mat-accordion>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </mat-tab>
+                <mat-tab  label="Contact Lens"> 
+                    <div class="row">
+                        <div class="col-md-12 col-xl-12">
+                            <div class="table-responsive mg-t-20">
+                                <table class="table table-bordered  ">
+                                    <tbody>
+                                        <tr *ngFor="let prescription of prescriptionsContactLens;let i=index;" >
+                                            <mat-accordion class="example-headers-align" multi>
+                                                    <mat-expansion-panel [expanded]="i == 0">
+                                                        <mat-expansion-panel-header>
+                                                            <mat-panel-title>
+                                                                    #LENS000  {{prescription?.id}} ( {{ prescription?.created_at | date: "dd-MM-yyyy ',' HH:mm a"}} )
+                                                            </mat-panel-title>
+                                                            <mat-panel-description>
+                                                                <div>
+                                                                    Prescription By  <b>{{prescription?.given_by}} - Valid until {{prescription?.validity}} </b>
+                                                                </div>
+                                                            </mat-panel-description>
+                                                        </mat-expansion-panel-header>
+                                                            <div class="row">
+                                                                <div class="col-xl-12">
+                                                                    <table  class="table table-bordered mg-b-0">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th> <span class="tx-danger">*</span></th>
+                                                                                <th>SPH</th>
+                                                                                <th>CYL</th>
+                                                                                <th>AXIS</th>
+                                                                                <th>BC</th>
+                                                                                <th>Dia</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <tr *ngFor="let lens of prescription?.lenspower;let i=index;">
+                                                                                <td>{{ (lens?.eye_type == 'right_eye')? "Right Eye" : "Left Eye" }}</td>
+                                                                                <td>{{ (lens?.sph != null)? lens?.sph : "-" }}</td>
+                                                                                <td>{{ (lens?.cyl != null)? lens?.cyl : "-" }}</td>
+                                                                                <td>{{ (lens?.axis != null)? lens?.axis : "-" }}</td>
+                                                                                <td>{{ (lens?.bc != null)? lens?.bc : "-" }}</td>
+                                                                                <td>{{ (lens?.dia != null)? lens?.dia : "-" }}</td>
+                                                                                
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                     <div class="footer-block" >
+                                                                        <div class="button-group mg-l-10 mg-b-15">
+                                                                            <button class="footer-block text-align" type="button"   (click)="createPrescription(prescription)"   mat-raised-button> View (Or) Edit Prescription </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-xl-12">
+                                                                Remarks:   {{prescription?.remarks}}
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-xl-12">
+                                                                    attachment:   <a target="_blank" href="{{SERVER_PATH}}/storage/{{prescription?.attachment}}">{{prescription?.attachment}}</a>
+
+                                                                </div>
+                                                            </div>
+
+                                                        </mat-expansion-panel>
+                                            </mat-accordion>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
+        </div>
+    </div>
+</div>

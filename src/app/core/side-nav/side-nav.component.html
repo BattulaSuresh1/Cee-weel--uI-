@@ -1,0 +1,102 @@
+<div class="az-sidebar">
+    <div class="az-sidebar-header">
+      <a href="javascript:void(0)" class="az-logo">
+        <img width="150" src="./assets/logo.png" alt="logo">
+      </a>
+    </div><!-- az-sidebar-header -->
+    <div class="az-sidebar-loggedin">
+      <div class="az-img-user online"><img src="assets/images/img1.jpg" alt=""></div>
+      <div class="media-body">
+        <h6>{{ userDetails?.name}}</h6>
+        <span>{{ userDetails?.email}}</span>
+      </div><!-- media-body -->
+    </div><!-- az-sidebar-loggedin -->
+    <div class="az-sidebar-body">
+      <ul class="nav">
+        <li class="nav-label">Main Menu</li>
+        <li class="nav-item active show" [ngClass]="{ 'active': dashboard.isActive }" >
+          <a routerLink="/dashboard" routerLinkActive="active" #dashboard="routerLinkActive" class="nav-link">
+            <i class="typcn typcn-clipboard"></i>Dashboard
+          </a>
+        </li>
+
+        <li class="nav-item " [ngClass]="{ 'active': customers.isActive }" *appPermissions=[MENU_PERMISSIONS?.CUSTOMER_MENUS]>
+          <a routerLink="/customers" routerLinkActive="active" #customers="routerLinkActive" class="nav-link">
+            <i class="icon ion-ios-people"></i>Customer 
+          </a>
+      </li>
+
+      
+      <li class="nav-item " [ngClass]="{ 'active': customers.isActive }" *appPermissions=[MENU_PERMISSIONS?.CUSTOMER_MENUS]>
+        <a routerLink="/vendor" routerLinkActive="active" #customers="routerLinkActive" class="nav-link">
+          <i class="icon ion-ios-people"></i>Vendors 
+        </a>
+    </li>
+
+      
+
+    <li class="nav-item " [ngClass]="{ 'active': products.isActive }" *appPermissions=[MENU_PERMISSIONS?.PRODUCT_MENUS]>
+      <a routerLink="/products" routerLinkActive="active" #products="routerLinkActive" class="nav-link">
+        <i class="far fa-check-circle"></i>Products
+      </a>
+  </li>
+
+  <li class="nav-item " [ngClass]="{ 'active': brand.isActive }" *appPermissions=[MENU_PERMISSIONS?.PRODUCT_MENUS]>
+    <a routerLink="/brand" routerLinkActive="active" #brand="routerLinkActive" class="nav-link">
+      <i class="far fa-star"></i>Brands
+    </a>
+</li>
+
+  <li class="nav-item " [ngClass]="{ 'active': products.isActive }" *appPermissions=[MENU_PERMISSIONS?.PRODUCT_MENUS]>
+    <a routerLink="/orders" routerLinkActive="active" #products="routerLinkActive" class="nav-link">
+      <i class="icon ion-ios-settings"></i>Orders
+    </a>
+</li>
+
+<li class="nav-item " [ngClass]="{ 'active': users.isActive }" *appPermissions=[MENU_PERMISSIONS?.USER_MENUS]>
+  <a routerLink="/users" routerLinkActive="active" #users="routerLinkActive" class="nav-link">
+    <i class="icon ion-ios-person"></i>Users
+  </a>
+</li>
+
+
+
+        <li class="nav-item " [ngClass]="{ 'active': roles.isActive }" *appPermissions=[MENU_PERMISSIONS?.ROLE_MENUS]>
+          <a routerLink="/roles" routerLinkActive="active" #roles="routerLinkActive" class="nav-link">
+            <i class="typcn typcn-group-outline"></i>Roles
+          </a>
+        </li>
+       
+        <li class="nav-item " [ngClass]="{ 'active': suppliers.isActive }" *appPermissions=[MENU_PERMISSIONS?.SUPPLIER_MENUS]>
+          <a routerLink="/suppliers" routerLinkActive="active" #suppliers="routerLinkActive" class="nav-link">
+            <i class="icon ion-ios-person"></i>Suppliers
+          </a>
+      </li>
+
+      <!-- <li class="nav-item " [ngClass]="{ 'active': inventorys.isActive }">
+          <a routerLink="/inventorys" routerLinkActive="active" #inventorys="routerLinkActive" class="nav-link">
+            <i class="icon ion-ios-stats"></i>Inventory
+          </a>
+      </li> -->
+
+      <li class="nav-item " [ngClass]="{ 'active': storeManagement.isActive }">
+        <a routerLink="/store-managment" routerLinkActive="active" #storeManagement="routerLinkActive" class="nav-link">
+          <i class="icon ion-ios-stats"></i>Store Management
+        </a>
+    </li>
+
+    <li class="nav-item " [ngClass]="{ 'active': purchageOrder.isActive }">
+      <a routerLink="/purchage-order" routerLinkActive="active" #purchageOrder="routerLinkActive" class="nav-link">
+        <i class="icon ion-ios-stats"></i>Purchage Order
+      </a>
+  </li>
+
+    <li class="nav-item " [ngClass]="{ 'active': warehouseManagment.isActive }" *appPermissions=[MENU_PERMISSIONS?.WAREHOUSE_MENUS]>
+        <a routerLink="/warehouse-managment" routerLinkActive="active" #warehouseManagment="routerLinkActive" class="nav-link">
+          <i class="icon ion-ios-stats"></i>Warehouse Management
+        </a>
+    </li>
+       
+      </ul><!-- nav -->
+    </div><!-- az-sidebar-body -->
+  </div><!-- az-sidebar -->

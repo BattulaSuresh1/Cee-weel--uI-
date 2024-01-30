@@ -1,0 +1,49 @@
+.login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 90vh;
+    /* background-color: #EDF1F5; */
+}
+
+.logo {
+    margin-bottom: 1rem;
+}
+
+.mat-card {
+    border: 1px solid #dadce0;
+}
+
+.mat-card-content {
+    margin-bottom: 5px;
+}
+
+.mat-card-content form {
+    padding: 0px;
+}
+
+.mat-form-field {
+    width: auto;
+    min-width: 300px;
+}
+
+.material-icons {
+    color: #98A2B0;
+}
+
+.mat-card-actions button {
+    color: #1EBED9;
+}
+
+.center-align{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* .az-body.az-body-sidebar,
+.az-content,
+.az-content-wrapper {
+    background-color: #EDF1F5!important;
+} */

@@ -1,0 +1,69 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <h3 class="modal-title"> {{ btnText }} Role</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cancel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <form [formGroup]="roleForm" #myForm="ngForm" (ngSubmit)="roleFormSubmit()">
+
+            <mat-form-field>
+                <mat-label>Name</mat-label>
+                <input type="text" formControlName="name" matInput>
+                <mat-error *ngIf="formValidate?.name?.errors?.required">This field is required.</mat-error>
+                <mat-error *ngIf="formValidate?.name?.errors?.serverError">
+                        {{ formValidate?.name?.errors?.serverError }}
+                </mat-error>
+            </mat-form-field>
+
+            <div class="permissions-block">
+                <div class="row"><b>Give Permissions :</b></div>
+                <ng-container formArrayName="permissionGroups">
+                    <ng-container *ngFor="let permissionGroup of permissionGroups().controls; let i = index">
+                        <table class="permissions-table" [formGroupName]="i">
+                            <thead>
+                                <tr>
+                                    <th>
+                                            {{permissionGroup?.controls?.group_name?.value}}
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-container formArrayName="permissions">
+                                    <ng-container *ngFor="let permission of permissions(i).controls; let j = index">
+                                        <tr  [formGroupName]="j">
+                                            
+                                            <td style="width:70%"> 
+                                                    {{permission?.controls?.name?.value}}
+                                            </td>
+                                            <td style="width:30%">
+                                                    <mat-slide-toggle 
+                                                        class="example-margin"
+                                                        formControlName="give_permission"
+                                                        [color]="blue"
+                                                        [checked]="false"
+                                                        [disabled]="false"
+                                                    > </mat-slide-toggle>
+                                            </td>
+                                        
+                                        </tr>
+                                    </ng-container>
+                                </ng-container>
+                            </tbody>
+                        </table>
+                    </ng-container>
+                </ng-container>
+
+            </div>
+
+            <div class="footer-block text-center">
+                <div class="button-group">
+                    <button type="submit" mat-raised-button class="btn-int-blue" >{{ btnText }} </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

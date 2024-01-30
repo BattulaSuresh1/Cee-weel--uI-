@@ -1,0 +1,31 @@
+<!-- <div class="col-lg-4"> -->
+    <div class="product">
+        <div class="title">
+            <!-- <img src="{{SERVER_PATH}}/storage/{{product?.images}}" alt=""> -->
+            <img
+            *ngIf="product?.images !== null"
+            src="{{ SERVER_PATH }}/storage/{{ product?.images }}"
+            alt=""
+            width="80"
+            height="50"
+          />
+          <div class="element.style"> <img
+            *ngIf="product?.images == null"
+            width="80"
+            height="50"
+            style="height:250px"
+            src="assets/images/blank-profile-picture.png"
+            alt=""
+          /></div>
+        </div>
+        <div class="body">
+                <p class="productName"> {{product?.name}} </p>
+                <p class="productDesc"> {{product?.item_description}} </p>
+                <p> INR {{product?.price}} </p>
+        </div>
+        <div class="footer">
+                <button class="btn btn-success btn-with-icon btn-block" (click)="addProductToCart(product?.id)">
+                        <i class="typcn typcn-shopping-cart"></i> add</button>
+        </div>
+    </div>
+<!-- </div> -->
