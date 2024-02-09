@@ -294,7 +294,11 @@ export class ProductCreateComponent implements OnInit {
     this.productForm.patchValue({images: fileName})
   }
 
+
+
+
   productFormSubmit(){
+
     // this.productForm.get('rim_type').enable();
     // this.productForm.get('size').enable();
     // this.productForm.get('prescription_type').enable();
