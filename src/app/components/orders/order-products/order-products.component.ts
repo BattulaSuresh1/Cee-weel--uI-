@@ -126,7 +126,7 @@ export class OrderProductsComponent implements OnInit, OnDestroy  {
   getProductData(){
     this.productService.createProduct().subscribe(
         (res:any)=>{
-            this.item_types = res.data.item_types;
+            this.item_types = res.data.item_types.filter(item => item.key === 'FR' || item.key === 'SG' || item.key === 'AC');
             this.rim_types = res.data.rim_types;
             this.brands = res.data.brands;
             this.shapes = res.data.shapes;
@@ -157,7 +157,12 @@ export class OrderProductsComponent implements OnInit, OnDestroy  {
    
     this.productService.getProducts(params)
     .subscribe((response: any) =>{
-      this.products = response.data;
+      // this.products = response.data;
+
+      // Filter products based on allowed item types
+      this.products = response.data.filter(product => {
+        return ['FRAME - ( FR )', 'SUNGLASS - ( SG )', 'ACCESSORIES - (AC)'].includes(product.item_type);
+      });
       this.dataSource = new MatTableDataSource<any>(response.data);
       this.dataSource.paginator = this.paginator;
       this.page_length = response.total;

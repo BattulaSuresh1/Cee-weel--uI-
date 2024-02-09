@@ -32,6 +32,10 @@
     line-height: inherit;
 }
 
+.lensbtn{
+    margin: 10px;
+}
+
 .lensForm mat-form-field,
 .measurementsForm  mat-form-field{
     width: 280px;
@@ -77,7 +81,7 @@ table mat-form-field{
 
 .lensForm mat-form-field{
     margin: 0.5rem;
-    font-weight:bolder;
+    font-weight:bold;
 }
 
 .measurementsForm mat-form-field,

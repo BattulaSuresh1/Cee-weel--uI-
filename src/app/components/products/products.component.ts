@@ -45,6 +45,8 @@ export class ProductsComponent implements OnInit, AfterViewInit {
 
   public filter: FormControl = new FormControl("", Validators.required)
 
+  pageIndex = 0;
+
   constructor(
     private dialog: MatDialog,
     private matIconRegistry: MatIconRegistry,
@@ -63,7 +65,10 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.getData(this.current_page, this.page_length);
     this.filter.valueChanges.subscribe((f) => {
+
+      this.page_length = ITEMS_PER_PAGE;
       this.getData(this.current_page, this.page_length);
+
     });
     this.filter.valueChanges.pipe(
       debounceTime(300), // Adjust the debounce time as needed (in milliseconds)
@@ -147,6 +152,8 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   }
 
   advancedFilter() {
+    this.current_page = 0;
+    this.pageIndex = 0;
     this.getData(this.current_page, this.page_length);
   }
 
@@ -172,9 +179,8 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   pageChanged(event: PageEvent) {
     this.page_length = event.pageSize;
     this.current_page = event.pageIndex + 1;
+    this.pageIndex = event.pageIndex;
     this.getData(this.current_page, this.page_length);
   }
-
-
 
 }

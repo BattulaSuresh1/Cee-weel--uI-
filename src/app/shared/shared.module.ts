@@ -15,6 +15,7 @@ import { ProductComponent } from './components/product/product.component';
 import { CartComponent } from './components/cart/cart.component';
 import { CartItemComponent } from './components/cart/cart-item/cart-item.component';
 import { GridProductComponent } from './components/product/grid-product/grid-product.component';
+import { CartLensComponent } from './components/cart/cart-lens/cart-lens.component';
 
 
 @NgModule({
@@ -29,6 +30,7 @@ import { GridProductComponent } from './components/product/grid-product/grid-pro
     CartComponent,
     CartItemComponent,
     GridProductComponent,
+    CartLensComponent,
     
   ],
   imports: [

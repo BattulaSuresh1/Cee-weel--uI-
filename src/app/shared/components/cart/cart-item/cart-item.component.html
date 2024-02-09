@@ -11,7 +11,12 @@
                   <img src="assets/images/blank-profile-picture.png" alt="Default Image"  class="img" aria-hidden="false">
                 </ng-template>
                 <button type="button" (click)="remove()" mat-stroked-button >REMOVE</button>
+
+                <button type="button" class="lensbtn" (click)="openLensSearchDialog()" mat-stroked-button color="primary">Lens</button>
+                
             </div>
+
+
         
             <div class="productDesc">
                 <p>{{cart?.product?.name}}</p>
@@ -178,7 +183,7 @@
                                                             <!-- Example: -->
                                                             <mat-form-field appearance="outline">
                                                                 <mat-label>Brand</mat-label>
-                                                                <mat-select formControlName="brand" (selectionChange)="onBrandChange($event.value ,  'right_eye') ">
+                                                                <mat-select formControlName="brand" (selectionChange)="onBrandChange($event.value , 'right_eye') ">
                                                                   <mat-option *ngFor="let brand of brands;" [value]="brand?.id">
                                                                     <span>{{ brand?.name }}</span>
                                                                   </mat-option>
@@ -188,7 +193,7 @@
                                                           
                                                             <mat-form-field appearance="outline">
                                                                 <mat-label>Type</mat-label>
-                                                                <mat-select formControlName="type" [disabled]="!isTypeEnabled" (selectionChange)="onTypeChange($event.value ,  'right_eye')">
+                                                                <mat-select formControlName="type" [disabled]="!isTypeEnabled" (selectionChange)="onTypeChange($event.value , 'right_eye')">
                                                                     <mat-option *ngFor="let type of types;" [value]="type?.id">
                                                                         <span>{{ type?.name }}</span>
                                                                     </mat-option>
@@ -200,7 +205,7 @@
     
                                                             <mat-form-field appearance="outline">
                                                                 <mat-label>Index</mat-label>
-                                                                <mat-select formControlName="index" [disabled]="!isIndexEnabled" (selectionChange)="onIndexChange($event.value)">
+                                                                <mat-select formControlName="index" [disabled]="!isIndexEnabled" (selectionChange)="onIndexChange($event.value ,'right_eye')">
                                                                     <mat-option *ngFor="let index of indexs;" [value]="index?.id">
                                                                         <span>{{ index?.name }}</span>
                                                                     </mat-option>
@@ -212,7 +217,7 @@
     
                                                             <mat-form-field appearance="outline">
                                                                 <mat-label>Dia</mat-label>
-                                                                <mat-select formControlName="dia" [disabled]="!isDiaEnabled" (selectionChange)="onDiaChange($event.value)">
+                                                                <mat-select formControlName="dia" [disabled]="!isDiaEnabled" (selectionChange)="onDiaChange($event.value , 'right_eye')">
                                                                     <mat-option *ngFor="let dia of dias;" [value]="dia?.id">
                                                                         <span>{{ dia?.name }}</span>
                                                                     </mat-option>
@@ -222,10 +227,9 @@
                                                                 <mat-error *ngIf="lensFormValidate?.dia?.errors?.serverError">{{ lensFormValidate?.dia?.errors?.serverError }}</mat-error>
                                                             </mat-form-field>
     
-    
                                                             <mat-form-field appearance="outline">
                                                                 <mat-label>From</mat-label>
-                                                                <mat-select formControlName="from" [disabled]="!isFromEnabled" (selectionChange)="onFromChange($event.value)">
+                                                                <mat-select formControlName="from" [disabled]="!isFromEnabled" (selectionChange)="onFromChange($event.value , 'right_eye')">
                                                                     <mat-option *ngFor="let from of froms;" [value]="from?.id">
                                                                         <span>{{ from?.from }}</span>
                                                                     </mat-option>
@@ -237,7 +241,7 @@
     
                                                             <mat-form-field appearance="outline">
                                                                 <mat-label>To</mat-label>
-                                                                <mat-select formControlName="to" [disabled]="!isToEnabled" (selectionChange)="onToChange($event.value)">
+                                                                <mat-select formControlName="to" [disabled]="!isToEnabled" (selectionChange)="onToChange($event.value , 'right_eye')">
                                                                     <mat-option *ngFor="let to of tos;" [value]="to?.id">
                                                                         <span>{{ to?.to }}</span>
                                                                     </mat-option>
@@ -249,7 +253,7 @@
     
                                                             <mat-form-field appearance="outline">
                                                                 <mat-label>RP</mat-label>
-                                                                <mat-select formControlName="rp"  [disabled]="!isRpEnabled" (selectionChange)="onRpChange($event.value)">
+                                                                <mat-select formControlName="rp"  [disabled]="!isRpEnabled" (selectionChange)="onRpChange($event.value , 'right_eye')">
                                                                     <mat-option *ngFor="let rp of rps;" [value]="rp?.id">
                                                                         <span>{{ rp?.rp }}</span>
                                                                     </mat-option>
@@ -259,9 +263,12 @@
                                                                 <mat-error *ngIf="lensFormValidate?.rp?.errors?.serverError">{{ lensFormValidate?.rp?.errors?.serverError }}</mat-error>
                                                             </mat-form-field>
     
+
+    
+
                                                             <mat-form-field appearance="outline">
                                                                 <mat-label>Max cyl</mat-label>
-                                                                <mat-select formControlName="max_cyl"  [disabled]="!isMaxcylEnabled" (selectionChange)="onMaxcylChange($event.value)">
+                                                                <mat-select formControlName="max_cyl"  [disabled]="!isMaxcylEnabled" (selectionChange)="onMaxcylChange($event.value , 'right_eye')">
                                                                     <mat-option *ngFor="let max_cyl of max_cyls;" [value]="max_cyl?.id">
                                                                         <span>{{ max_cyl?.name }}</span>
                                                                     </mat-option>
@@ -316,10 +323,15 @@
                                                                 <mat-error *ngIf="lensFormValidate?.cost_price?.errors?.serverError"> {{ lensFormValidate?.cost_price?.errors?.serverError }} </mat-error>
                                                             </mat-form-field>
 
+                                                          
+
+
                                                           </div>
 
 
                                                           <div *ngIf="selectedEye == '2'" formGroupName="left_eye">
+
+                                                            
                                                             <!-- Add your left eye form fields here -->
                                                             <mat-form-field appearance="outline">
                                                                 <mat-label>Brand</mat-label>
@@ -336,7 +348,7 @@
                                                               
                                                             <mat-form-field appearance="outline">
                                                                 <mat-label>Type</mat-label>
-                                                                <mat-select formControlName="type"  [disabled]="!isTypeEnabled" (selectionChange)="onTypeChange($event.value)">
+                                                                <mat-select formControlName="type"  [disabled]="!isTypeEnabled" (selectionChange)="onTypeChange($event.value , 'left_eye')">
                                                                     <mat-option *ngFor="let type of types;" [value]="type?.id">
                                                                         <span>{{ type?.name }}</span>
                                                                     </mat-option>
@@ -348,7 +360,7 @@
     
                                                             <mat-form-field appearance="outline">
                                                                 <mat-label>Index</mat-label>
-                                                                <mat-select formControlName="index" [disabled]="!isIndexEnabled" (selectionChange)="onIndexChange($event.value)">
+                                                                <mat-select formControlName="index" [disabled]="!isIndexEnabled" (selectionChange)="onIndexChange($event.value , 'left_eye')">
                                                                     <mat-option *ngFor="let index of indexs;" [value]="index?.id">
                                                                         <span>{{ index?.name }}</span>
                                                                     </mat-option>
@@ -360,7 +372,7 @@
     
                                                             <mat-form-field appearance="outline">
                                                                 <mat-label>Dia</mat-label>
-                                                                <mat-select formControlName="dia" [disabled]="!isDiaEnabled" (selectionChange)="onDiaChange($event.value)">
+                                                                <mat-select formControlName="dia" [disabled]="!isDiaEnabled" (selectionChange)="onDiaChange($event.value , 'left_eye')">
                                                                     <mat-option *ngFor="let dia of dias;" [value]="dia?.id">
                                                                         <span>{{ dia?.name }}</span>
                                                                     </mat-option>
@@ -373,7 +385,7 @@
     
                                                             <mat-form-field appearance="outline">
                                                                 <mat-label>From</mat-label>
-                                                                <mat-select formControlName="from">
+                                                                <mat-select formControlName="from" [disabled]="!isFromEnabled" (selectionChange)="onFromChange($event.value , 'left_eye')">
                                                                     <mat-option *ngFor="let from of froms;" [value]="from?.id">
                                                                         <span>{{ from?.from }}</span>
                                                                     </mat-option>
@@ -385,7 +397,7 @@
     
                                                             <mat-form-field appearance="outline">
                                                                 <mat-label>To</mat-label>
-                                                                <mat-select formControlName="to">
+                                                                <mat-select formControlName="to" [disabled]="!isToEnabled" (selectionChange)="onToChange($event.value , 'left_eye')">
                                                                     <mat-option *ngFor="let to of tos;" [value]="to?.id">
                                                                         <span>{{ to?.to }}</span>
                                                                     </mat-option>
@@ -397,7 +409,7 @@
     
                                                             <mat-form-field appearance="outline">
                                                                 <mat-label>RP</mat-label>
-                                                                <mat-select formControlName="rp">
+                                                                <mat-select formControlName="rp" [disabled]="!isRpEnabled" (selectionChange)="onRpChange($event.value , 'left_eye')">
                                                                     <mat-option *ngFor="let rp of rps;" [value]="rp?.id">
                                                                         <span>{{ rp?.rp }}</span>
                                                                     </mat-option>
@@ -409,7 +421,7 @@
     
                                                             <mat-form-field appearance="outline">
                                                                 <mat-label>Max cyl</mat-label>
-                                                                <mat-select formControlName="max_cyl">
+                                                                <mat-select formControlName="max_cyl" [disabled]="!isMaxcylEnabled" (selectionChange)="onMaxcylChange($event.value , 'left_eye')">
                                                                     <mat-option *ngFor="let max_cyl of max_cyls;" [value]="max_cyl?.id">
                                                                         <span>{{ max_cyl?.name }}</span>
                                                                     </mat-option>
@@ -464,7 +476,7 @@
                                                             <!-- Add your both eyes form fields here -->
                                                             <mat-form-field appearance="outline">
                                                                 <mat-label>Brand</mat-label>
-                                                                <mat-select formControlName="brand" (selectionChange)="onBrandChange($event.value)">
+                                                                <mat-select formControlName="brand" (selectionChange)="onBrandChange($event.value, 'both_eyes')">
                                                                     <mat-option *ngFor="let brand of brands;" [value]="brand?.id">
                                                                         <span>{{ brand?.name }}</span>
                                                                     </mat-option>
@@ -477,7 +489,7 @@
                                                               
                                                             <mat-form-field appearance="outline">
                                                                 <mat-label>Type</mat-label>
-                                                                <mat-select formControlName="type">
+                                                                <mat-select formControlName="type" [disabled]="!isTypeEnabled" (selectionChange)="onTypeChange($event.value , 'both_eyes')">
                                                                     <mat-option *ngFor="let type of types;" [value]="type?.id">
                                                                         <span>{{ type?.name }}</span>
                                                                     </mat-option>
@@ -489,7 +501,7 @@
     
                                                             <mat-form-field appearance="outline">
                                                                 <mat-label>Index</mat-label>
-                                                                <mat-select formControlName="index">
+                                                                <mat-select formControlName="index"  [disabled]="!isIndexEnabled" (selectionChange)="onIndexChange($event.value , 'both_eyes')">
                                                                     <mat-option *ngFor="let index of indexs;" [value]="index?.id">
                                                                         <span>{{ index?.name }}</span>
                                                                     </mat-option>
@@ -501,7 +513,7 @@
     
                                                             <mat-form-field appearance="outline">
                                                                 <mat-label>Dia</mat-label>
-                                                                <mat-select formControlName="dia">
+                                                                <mat-select formControlName="dia" [disabled]="!isDiaEnabled" (selectionChange)="onDiaChange($event.value , 'both_eyes')">
                                                                     <mat-option *ngFor="let dia of dias;" [value]="dia?.id">
                                                                         <span>{{ dia?.name }}</span>
                                                                     </mat-option>
@@ -511,10 +523,9 @@
                                                                 <mat-error *ngIf="lensFormValidate?.dia?.errors?.serverError">{{ lensFormValidate?.dia?.errors?.serverError }}</mat-error>
                                                             </mat-form-field>
     
-    
                                                             <mat-form-field appearance="outline">
                                                                 <mat-label>From</mat-label>
-                                                                <mat-select formControlName="from">
+                                                                <mat-select formControlName="from"  [disabled]="!isFromEnabled" (selectionChange)="onFromChange($event.value , 'both_eyes')">
                                                                     <mat-option *ngFor="let from of froms;" [value]="from?.id">
                                                                         <span>{{ from?.from }}</span>
                                                                     </mat-option>
@@ -526,7 +537,7 @@
     
                                                             <mat-form-field appearance="outline">
                                                                 <mat-label>To</mat-label>
-                                                                <mat-select formControlName="to">
+                                                                <mat-select formControlName="to" [disabled]="!isToEnabled" (selectionChange)="onToChange($event.value , 'both_eyes')">
                                                                     <mat-option *ngFor="let to of tos;" [value]="to?.id">
                                                                         <span>{{ to?.to }}</span>
                                                                     </mat-option>
@@ -538,7 +549,7 @@
     
                                                             <mat-form-field appearance="outline">
                                                                 <mat-label>RP</mat-label>
-                                                                <mat-select formControlName="rp">
+                                                                <mat-select formControlName="rp" [disabled]="!isRpEnabled" (selectionChange)="onRpChange($event.value , 'both_eyes')">
                                                                     <mat-option *ngFor="let rp of rps;" [value]="rp?.id">
                                                                         <span>{{ rp?.rp }}</span>
                                                                     </mat-option>
@@ -550,7 +561,7 @@
     
                                                             <mat-form-field appearance="outline">
                                                                 <mat-label>Max cyl</mat-label>
-                                                                <mat-select formControlName="max_cyl">
+                                                                <mat-select formControlName="max_cyl" [disabled]="!isMaxcylEnabled" (selectionChange)="onMaxcylChange($event.value , 'both_eyes')">
                                                                     <mat-option *ngFor="let max_cyl of max_cyls;" [value]="max_cyl?.id">
                                                                         <span>{{ max_cyl?.name }}</span>
                                                                     </mat-option>
@@ -559,7 +570,7 @@
                                                                 <mat-error *ngIf="lensForm.get('both_eyes.max_cyl').hasError('required')">This field is required.</mat-error>
                                                                 <mat-error *ngIf="lensFormValidate?.max_cyl?.errors?.serverError">{{ lensFormValidate?.max_cyl?.errors?.serverError }}</mat-error>
                                                             </mat-form-field>
-                                                            
+
                                                             <br>
                                                             <hr>
 
@@ -598,9 +609,7 @@
                                                                 <mat-error *ngIf="lensFormValidate?.cost_price?.errors?.serverError"> {{ lensFormValidate?.cost_price?.errors?.serverError }} </mat-error>
                                                             </mat-form-field>
                                                         </div> 
-
-                                                      
-
+                                                    
                                                     </div>
                                                     <div class="col-lg-6"></div>
                                                 </div>
@@ -608,7 +617,7 @@
                                                     <div class="footer-block text-center">
                                                         <div class="button-group">
                                                             <button type="submit" (click)="tabChange(0)"  mat-raised-button class="btn-int-blue"> previous </button>
-                                                            <button type="submit" [disabled]="lensForm.invalid" (click)="tabChange(2)"  mat-raised-button class="btn-int-blue"> Next </button>
+                                                            <button type="submit" [disabled]="lensForm.invalid" (click)="tabChange(0)"  mat-raised-button class="btn-int-blue"> Next </button>
                                                         </div>
                                                     </div>
                                                 </form>

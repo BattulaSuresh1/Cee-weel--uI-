@@ -14,7 +14,7 @@
                     </div>
                     <div class="col-lg-6 col-md-12 col-sm-12">
                         <mat-paginator *appPermissions="[['ROLE_LIST']]" #paginator [length]="page_length"
-                            [pageSize]="items_per_page" [pageSizeOptions]="PAGE_SIZE_OPTIONS_DATA"
+                            [pageSize]="items_per_page" [pageSizeOptions]="PAGE_SIZE_OPTIONS_DATA" [pageIndex]="pageIndex"
                             (page)="pageChanged($event)"></mat-paginator>
                     </div>
                     <div class="col-lg-2 col-md-12 col-sm-12">

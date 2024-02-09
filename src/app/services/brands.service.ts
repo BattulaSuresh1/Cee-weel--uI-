@@ -28,6 +28,10 @@ export class BrandsService {
     return this.http.post(`${this.REST_API_SERVER}/brandlist?${params.toString()}`,{ params: ""});
   }
 
+  public create(): Observable<any> {
+    return this.http.get(`${this.REST_API_SERVER}/brand-create`);
+  }
+
   public showBrandDetails(id:number|string):Observable<any>{
     return this.http.put(`${this.REST_API_SERVER}/brand-show/${id}`,{});
   }

@@ -43,6 +43,8 @@ export class CustomersComponent implements OnInit {
 
   public current_page:number = CURRENT_PAGE;
 
+  pageIndex = 0;
+
   roles: User[];
   dataSource = new MatTableDataSource<User>();
 
@@ -62,12 +64,12 @@ export class CustomersComponent implements OnInit {
       "filter",
       this.domSanitizer.bypassSecurityTrustResourceUrl("../../../assets/SVG/filter.svg")
       );
-
   }
 
   ngOnInit(): void {
     this.getData(this.current_page, this.page_length)
     this.filter.valueChanges.subscribe((f) => {
+      this.page_length = ITEMS_PER_PAGE;
         this.getData(this.current_page, this.page_length);
     });
     this.filter.valueChanges.pipe(
@@ -98,7 +100,6 @@ export class CustomersComponent implements OnInit {
     this.dialog.afterAllClosed.subscribe(e=>{
       // this.getData(this.current_page, this.items_per_page);
       this.getData(this.current_page, this.page_length);
-
     });
   }
 
@@ -149,6 +150,8 @@ export class CustomersComponent implements OnInit {
   }
 
   advancedFilter(){
+    this.current_page = 0;
+    this.pageIndex = 0;
     this.getData(this.current_page, this.page_length);
   }
   
@@ -175,6 +178,7 @@ export class CustomersComponent implements OnInit {
   pageChanged(event: PageEvent) {
     this.page_length = event.pageSize;
     this.current_page = event.pageIndex + 1;
+    this.pageIndex = event.pageIndex;
     this.getData(this.current_page, this.page_length);
   }
 

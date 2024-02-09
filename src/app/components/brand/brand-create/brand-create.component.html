@@ -16,6 +16,23 @@
                 <mat-error *ngIf="formValidate?.name?.errors?.required">This field is required.</mat-error>
                 <mat-error *ngIf="formValidate?.name?.errors?.serverError"> {{ formValidate?.name?.errors?.serverError }} </mat-error>
             </mat-form-field>
+<!-- 
+                       
+            <div *ngIf="categorys?.length > 0">
+                <label *ngFor="let category of categorys"   class="col-md-2">
+                    <input type="checkbox" [value]="category.id" formControlName="category"> {{ category.name }}
+                </label>
+            </div> -->
+
+            
+                <div *ngFor="let category of categorys">
+                    <label>
+                        <input type="checkbox" [value]="category" formControlName="category"
+                               [(ngModel)]="category.selected"> {{ category.name }}
+                    </label>
+                </div>
+            
+            
 
             <div class="footer-block text-center">
                 <div class="button-group">

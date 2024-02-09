@@ -14,7 +14,6 @@ import { FormGroup } from '@angular/forms';
 })
 export class CartComponent implements OnInit, OnDestroy {
 
-
   public cartList:any = [];
   public prescriptionList:any = [];
   public TotalCartItem:number;
@@ -60,34 +59,60 @@ export class CartComponent implements OnInit, OnDestroy {
     this.getPrescriptoins();
   }
 
+  // onInput(event: any): void {
+  //   // const discount = event.target.value;
+  //   // this.total = this.subtotal + this.totalGST - discount;
+  //   // this.discount = discount;
+
+  //   // const totalWithoutDisc = this.subtotal ;
+  //   const totalWithoutDisc = this.totalPriceWithDiscount;
+
+  //   if (this.discountType == "percentage") {
+  //     const discountPercent = event.target.value;
+  //     const discountAmt = totalWithoutDisc * (discountPercent / 100);
+  //     this.total = Math.round(totalWithoutDisc - discountAmt);
+  //     this.discount = discountAmt;
+  //     this.discountPercent = discountPercent;
+  //   }
+  //   else { // Amount
+  //     const discountAmt = event.target.value;
+  //     // const discountPercent = (discountAmt/totalWithoutDisc) * 100;
+  //     this.discount = discountAmt;
+  //     this.total = Math.round(totalWithoutDisc - discountAmt);
+  //     // this.discountPercent = discountPercent;
+  //     // console.log(discountPercent);
+  //   }
+    
+  //   if (this.total < 0)
+  //     this.total = 0;
+  // }
+
   onInput(event: any): void {
-    // const discount = event.target.value;
-    // this.total = this.subtotal + this.totalGST - discount;
-    // this.discount = discount;
-
-    // const totalWithoutDisc = this.subtotal ;
     const totalWithoutDisc = this.totalPriceWithDiscount;
-
     if (this.discountType == "percentage") {
       const discountPercent = event.target.value;
       const discountAmt = totalWithoutDisc * (discountPercent / 100);
       this.total = Math.round(totalWithoutDisc - discountAmt);
       this.discount = discountAmt;
       this.discountPercent = discountPercent;
-    }
-    else { // Amount
+    } else { // Amount
       const discountAmt = event.target.value;
-      // const discountPercent = (discountAmt/totalWithoutDisc) * 100;
-      this.total = Math.round(totalWithoutDisc - discountAmt);
-      this.discount = discountAmt;
-      // this.discountPercent = discountPercent;
-      // console.log(discountPercent);
+      
+      // Check if product discount is provided before applying it
+      if (this.discountType === "amount" && discountAmt <= totalWithoutDisc) {
+        this.discount = discountAmt;
+      } else {
+        this.discount = 0;
+      }
+  
+      this.total = Math.round(totalWithoutDisc - this.discount);
     }
-    
-    if (this.total < 0)
+  
+    if (this.total < 0) {
       this.total = 0;
+    }
   }
-
+  
   getCartItems():void{
     let params = new HttpParams();
     params = params.set('current_page', '1');
@@ -102,23 +127,19 @@ export class CartComponent implements OnInit, OnDestroy {
       this.discount = 0;
       this.subtotal = 0;
 
-
       this.cartList.map(cart => {
         this.subtotal += cart.product.price * cart.quantities;
         this.discount += +cart.discount;
       });
-
-      console.log(this.discount , this.subtotal ,'sure');
 
       this.total = this.subtotal - this.discount;
       this.total = Math.round(this.total);
       this.totalPriceWithDiscount = this.total;
       this.totalDiscount = Math.round(this.discount);
       this.authenticationService.setTotalCartItems(this.TotalCartItem);
-
+      console.log(this.discount , this.subtotal ,'sure');
     })
   }
-
 
   prescriptionUpdate(prescriptionId: any) {
     const param = {
@@ -149,7 +170,6 @@ export class CartComponent implements OnInit, OnDestroy {
     this.getCartItems();
   }
 
- 
   navigateToPlaceOrder(){
 
     if(this.cartList.length > 0){
@@ -185,6 +205,5 @@ export class CartComponent implements OnInit, OnDestroy {
       update_status:updateStatus
     };
  
-   
   }
 }

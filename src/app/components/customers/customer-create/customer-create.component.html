@@ -110,7 +110,7 @@
                         <span>{{country?.name}}</span>
                     </mat-option>
                 </mat-select>
-                <mat-error *ngIf="formValidate?.country?.errors?.required">This field is required.</mat-error>
+                <mat-error *ngIf="formValidate?.country?.errors?.required"></mat-error>
                  <mat-error *ngIf="customerForm.get('country').hasError('required')">This field is required.</mat-error>
                 <mat-error *ngIf="formValidate?.country?.errors?.serverError"> {{ formValidate?.country?.errors?.serverError }} </mat-error>
             </mat-form-field>
