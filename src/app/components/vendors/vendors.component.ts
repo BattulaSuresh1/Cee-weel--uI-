@@ -11,12 +11,13 @@ import { UsersService } from '../../services/users.service';
 import { CommonService } from '../../services/common.service';
 import { HttpParams } from '@angular/common/http';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
-import { CustomerService } from '../../services/customer.service';
+import { VendorService } from '../../services/vendor.service';
 import { FormControl, Validators } from '@angular/forms';
 import { environment } from '../../../environments/environment';
 import { AuthenticationService } from 'src/app/auth/services/authentication.service';
 import { Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { VendorsCreateComponent } from './vendors-create/vendors-create.component';
 
 const dialogConfig= new MatDialogConfig();
 dialogConfig.disableClose = true;
@@ -33,7 +34,7 @@ export class VendorsComponent implements OnInit {
 
   @ViewChild('paginator', {static: true}) paginator: MatPaginator;
 
-  displayedColumns: string[] = ['images','name', 'email','phone','age','profession','lifestyle','actions'];
+  displayedColumns: string[] = ['images','name', 'email','phone','code','actions'];
 
   public PAGE_SIZE_OPTIONS_DATA:number[] = PAGE_SIZE_OPTIONS;
 
@@ -54,7 +55,7 @@ export class VendorsComponent implements OnInit {
     private domSanitizer: DomSanitizer,
     private loaderService:LoaderService,
     private commonService:CommonService,
-    private customerService:CustomerService,
+    private vendorService:VendorService,
     private router: Router,
     private authenticationService: AuthenticationService
   ) {
@@ -87,34 +88,34 @@ export class VendorsComponent implements OnInit {
     // this.dataSource.paginator = this.paginator;
   }
 
-//   createCustomer():void{
-//     dialogConfig.width ="60%";
-//     dialogConfig.data = {
-//       id: undefined,
-//     }
-//     this.dialog.open(VendorsCreateComponent,dialogConfig);
 
-//     // UPDATE CONTACT DETAILS AFTER CREATING THE CONTACT
-//     this.dialog.afterAllClosed.subscribe(e=>{
-//       // this.getData(this.current_page, this.items_per_page);
-//       this.getData(this.current_page, this.page_length);
+  createVendor():void{
+    dialogConfig.width ="60%";
+    dialogConfig.data = {
+      id: undefined,
+    }
+    this.dialog.open(VendorsCreateComponent,dialogConfig);
 
-//     });
-//   }
+    // UPDATE CONTACT DETAILS AFTER CREATING THE CONTACT
+    this.dialog.afterAllClosed.subscribe(e=>{
+      // this.getData(this.current_page, this.items_per_page);
+      this.getData(this.current_page, this.page_length);
+    });
+  }
 
-//   edit(id:number):void{
-//     dialogConfig.width ="60%";
-//     dialogConfig.data = {
-//       id: id,
-//     }
+  edit(id:number):void{
+    dialogConfig.width ="60%";
+    dialogConfig.data = {
+      id: id,
+    }
 
-//     this.dialog.open(VendorsCreateComponent,dialogConfig);
+    this.dialog.open(VendorsCreateComponent,dialogConfig);
 
-//     // UPDATE CONTACT DETAILS AFTER CREATING THE CONTACT
-//     this.dialog.afterAllClosed.subscribe(e=>{
-//       this.getData(this.current_page, this.page_length);
-//     });
-//   }
+    // UPDATE CONTACT DETAILS AFTER CREATING THE CONTACT
+    this.dialog.afterAllClosed.subscribe(e=>{
+      this.getData(this.current_page, this.page_length);
+    });
+  }
 
   delete(id:number):void{
 
@@ -122,7 +123,7 @@ export class VendorsComponent implements OnInit {
     dialogConfig.height ="30%";
     dialogConfig.data = {
       title: "Confirm Action",
-      message : "Are you sure you want to delete the Customer?",
+      message : "Are you sure you want to delete the Vendor?",
       id: id,
    };
 
@@ -131,16 +132,16 @@ export class VendorsComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       (res) => {
           if(res.status){
-            this.deleteCustomer(res.id);
+            this.deleteVendors(res.id);
           }
       }
     );
   }
 
-  deleteCustomer(id:string){
+  deleteVendors(id:string){
     let params = new HttpParams();
     params = params.set('id', id);
-    this.customerService.deleteCustomer(params).subscribe(
+    this.vendorService.deleteVendor(params).subscribe(
       (res)=>{
           this.commonService.openAlert(res.message);
           this.getData(this.current_page, this.page_length);
@@ -159,12 +160,9 @@ export class VendorsComponent implements OnInit {
     let filter = this.filter.value;
     params = params.set('filter', filter);
 
-    // if(this.filter.value != "") {
-    //   let filter = this.filter.value;
-    //   params = params.set('filter',filter);
-    // }
+   
 
-    this.customerService.getCustomers(params)
+    this.vendorService.getVendors(params)
       .subscribe((response: any) => {
         this.dataSource = new MatTableDataSource<any>(response.data);
         this.dataSource.paginator = this.paginator;
@@ -178,10 +176,9 @@ export class VendorsComponent implements OnInit {
     this.getData(this.current_page, this.page_length);
   }
 
-  placeorder(customerId: number){
-      this.authenticationService.setCustomerId(customerId);
+  placeorder(vendorId: number){
+      this.authenticationService.setVendorId(vendorId);
       this.router.navigate(['/', 'order-products']);
   }
-
 
 }

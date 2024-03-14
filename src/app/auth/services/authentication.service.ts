@@ -205,6 +205,12 @@ export class AuthenticationService {
     this.setCustomerSubject(customerId);
   }
 
+  public setVendorId(id:string|number):void{
+    let vendorId = (id != null) ? id.toString() : "";
+    console.log(`setcutomerid on localstorge.`)
+    localStorage.setItem('vendorId',vendorId);
+    this.setCustomerSubject(vendorId);
+  }
   public getCustomerId():string{
     return localStorage.getItem('customerId');
   }

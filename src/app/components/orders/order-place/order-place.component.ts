@@ -153,14 +153,26 @@ export class OrderPlaceComponent implements OnInit {
     const orderAmount = +this.orderItem.amount;
     const paidAmount = +this.orderItem.paid_amount;
   
-    if (paidAmount === orderAmount) {
-      return '1'; // Order Completed
-    } else if (paidAmount > 0 && paidAmount < orderAmount) {
-      return '0'; // Order Placed
+    // if (paidAmount === orderAmount) {
+    //   return '1'; // Order Completed
+    // } else if (paidAmount > 0 && paidAmount < orderAmount) {
+    //   return '0'; // Order Placed
+    // } else {
+    //   return '2'; // Order Canceled or no payment made yet
+    // }
+
+    if(paidAmount !== orderAmount){
+      return '0'
+    } else if (paidAmount === orderAmount){
+      return '1'
     } else {
-      return '2'; // Order Canceled or no payment made yet
+      return '2'
     }
-  }
+
+  };
+  
+  
+
   
 
   // getOrderStatusValue(): string {  

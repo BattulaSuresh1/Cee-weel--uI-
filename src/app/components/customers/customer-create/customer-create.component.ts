@@ -69,6 +69,8 @@ export class CustomerCreateComponent implements OnInit {
      this.customerId = data.id;
     }
 
+    
+   
 
     onDatepickerInput(event: any) {
       const input = event.target as HTMLInputElement;
@@ -101,7 +103,7 @@ export class CustomerCreateComponent implements OnInit {
     this.createcustomerForm();  //this method is used to intialize the form of customer data
     this.getCustomerData();     // this method is used fetch the data of customers from the API
       
-
+    this.onStateChange(36);
      this.customerForm.get('country').valueChanges.subscribe(
       val  => {
         // debugger;

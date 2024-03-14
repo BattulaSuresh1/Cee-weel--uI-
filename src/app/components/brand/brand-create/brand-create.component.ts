@@ -8,105 +8,131 @@ import { map, startWith } from 'rxjs/operators';
 import { UsersService } from '../../../services/users.service';
 import { CommonService } from '../../../services/common.service';
 import { BrandsService } from 'src/app/services/brands.service';
+
 @Component({
   selector: 'app-brand-create',
   templateUrl: './brand-create.component.html',
   styleUrls: ['./brand-create.component.css']
 })
 export class BrandCreateComponent implements OnInit {
-  /** USING THIS TO RESET FORM  WITH OUT SHOWING FORMVALIDAITON ERRORS**/
   @ViewChild('myForm', { static: false }) myForm: NgForm;
   public brandForm: FormGroup;
-
- // public brandId: number = undefined;
-  public brandId: number
-
+  public brandId: number;
   public btnText: string = "Create";
   public brand: any;
-  public categorys :any[] =[];
-  // public data: any; // Add data property to store item types
+  public categorys: any[] = [];
   public page_length: number = GET_ALL;
   public current_page: number = CURRENT_PAGE;
   public roles: any;
   public user: any;
+
   constructor(private dialog: MatDialog,
     private commonService: CommonService,
     private fb: FormBuilder,
     private rolesService: RolesService,
     private brandservice: BrandsService,
     private cdr: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA) public data: any,) {
+    @Inject(MAT_DIALOG_DATA) public data: any) {
     this.brandId = data.id;
   }
 
-  name!: string
-  // email!: string
-  // password!: string
-  // errors: any = [];
-
   ngOnInit(): void {
     this.createbrandForm();
-    // this.getRoles(this.current_page, this.page_length);
     this.getUserDetails();
+    // this.loadBrandDetails();
   }
 
   // getUserDetails(): void {
-  //   if (this.brandId != undefined) {
-  //     this.btnText = "Update";
-  //     this.brandservice.showBrandDetails(this.brandId).subscribe(
-  //       (response: any) => {
-  //         console.log(response);
-  //          this.brand = response.data.brand;
-  //          this.user = response.data.brand.name;
-  //         this.brandForm.patchValue({
-  //           name: response.data.brand.name,
-  //           // employe_code: this.user.employe_code,
-  //           // phone: this.user.phone,
-  //           // email: this.sales.email,
-  //           // password: this.sales.password,
-  //         });
-  //       }
-  //     );
-  //     this.brandservice.create().subscribe((response: any) => {
-  //       this.data = response.data;
-  //   });
+  //   if (this.brandId !== undefined) {
+  //       this.btnText = "Update";
+  //       this.brandservice.showBrandDetails(this.brandId).subscribe(
+  //           (response: any) => {
+  //               this.brand = response.data.brand;
+  //               this.user = response.data.brand.name;
+  //               this.brandForm.patchValue({
+  //                   name: response.data.brand.name,
+  //                   category: response.data.brand.category 
+  //               });
+
+  //               // Loop through categories to set selected property
+  //               this.categorys.forEach(category => {
+  //                   // Check if the category ID exists in the brand's categories
+  //                   category.selected = response.data.brand.category.includes(category.id);
+  //               });
+  //           }
+  //       );
   //   }
+
+  //   this.brandservice.create().subscribe((response: any) => {
+  //             if (response.success) {
+  //                 this.categorys = response.data.category;
+
+  //                 // Initialize the selected property for each category
+  //                 this.categorys.forEach(category => {
+  //                   category.selected = false;
+  //                 });
+
+  //                 // If brand details are fetched, update the form with category selections
+  //                 if (this.brandId !== undefined) {
+  //                     this.brandForm.patchValue({
+  //                         category: this.categorys.filter(category => category.selected).map(category => category.id)
+  //                     });
+  //                 }
+  //             } else {
+  //                 console.error(response.message); // Log error message
+  //             }
+  //         });
   // }
 
   getUserDetails(): void {
-    if (this.brandId != undefined) {
+    if (this.brandId !== undefined) {
         this.btnText = "Update";
         this.brandservice.showBrandDetails(this.brandId).subscribe(
             (response: any) => {
-                console.log(response);
                 this.brand = response.data.brand;
                 this.user = response.data.brand.name;
                 this.brandForm.patchValue({
                     name: response.data.brand.name,
-                    category: response.data.brand.category  // Assign selected categories to the form
-                   
+                    category: response.data.brand.category 
+                });
+
+                // Loop through categories to set selected property
+                this.categorys.forEach(category => {
+                    // Check if the category ID exists in the brand's categories
+                    category.selected = response.data.brand.category.includes(category.id);
                 });
             }
-        );  
-      }
-       // Fetch item types from the API
-       this.brandservice.create().subscribe((response: any) => {
-        if (response.success) {
-            this.categorys = response.data.category;
-        } else {
-            console.error(response.message); // Log error message
-        }
-    });
-  }
+        );
+    }
+
+    this.brandservice.create().subscribe((response: any) => {
+              if (response.success) {
+                  this.categorys = response.data.category;
+
+                  // Initialize the selected property for each category
+                  this.categorys.forEach(category => {
+                    category.selected = false;
+                  });
+
+                  // If brand details are fetched, update the form with category selections
+                  if (this.brandId !== undefined) {
+                      this.brandForm.patchValue({
+                          category: this.categorys.filter(category => category.selected).map(category => category.id)
+                      });
+                  }
+              } else {
+                  console.error(response.message); // Log error message
+              }
+          });
+}
+  
+
+
 
   createbrandForm() {
     this.brandForm = this.fb.group({
       name: ['', [Validators.required]],
-      category: [] // Initialize itemTypes as an empty array
-      // category:''
-
-      // employe_code: ['', [Validators.required]],
-      // // phone: ['',[Validators.required]],
+      category: [[]]
     });
   }
 
@@ -114,108 +140,85 @@ export class BrandCreateComponent implements OnInit {
     return this.brandForm.controls;
   }
 
-  // brandFormSubmit() {
+//   brandFormSubmit() {
+//     if (this.brandForm.invalid) {
+//         return;
+//     }
 
-  //   if (this.brandForm.invalid) {
-  //     return;
-  //   }
+//     // Extract selected category IDs
+//     const selectedCategoryIds = this.categorys.filter(category => category.selected)
+//                                                .map(category => category.id);
 
-  //   if (this.brandId == undefined) {
-  //     console.log(this.brandForm.value);
-  //     this.brandservice.storeBrand(this.brandForm.value).subscribe(
-  //       (response) => {
-  //         this.brandForm.reset();
-  //         this.myForm.resetForm();
-  //         this.commonService.openAlert(response.message);
-  //         this.cancel();
-  //       },
-  //       (err) => {
+//     // Prepare form data
+//     const formData = {
+//         name: this.brandForm.value.name,
+//         category: selectedCategoryIds
+//     };
 
-  //         if (err instanceof HttpErrorResponse) {
-  //           if (err.status === 422) {
-  //             const validatonErrors = err.error.errors;
-  //             Object.keys(validatonErrors).forEach(prop => {
-  //               const formControl = this.brandForm.get(prop);
-  //               if (formControl) {
-  //                 formControl.setErrors({
-  //                   serverError: validatonErrors[prop]
-  //                 });
-  //               }
-  //             });
-  //           }
-  //         }
-  //       }
-  //     )
+//     if (this.brandId === undefined) {
+//         // Create brand
+//         this.brandservice.storeBrand(formData).subscribe(
+//             (response) => {
+//                 this.commonService.openAlert(response.message);
+//                 this.cancel();
+//             },
+//             (err) => {
+//                 this.handleError(err);
+//             }
+//         );
+//     } else {
+//         // Update brand
+//         this.brandservice.updateBrand(this.brandId, formData).subscribe(
+//             (response) => {
+//                 this.commonService.openAlert(response.message);
+//                 this.cancel();
+//             },
+//             (err) => {
+//                 this.handleError(err);
+//             }
+//         );
+//     }
+// }
 
-  //   } else {
+brandFormSubmit() {
+  if (this.brandForm.invalid) {
+      return;
+  }
 
-  //     this.brandservice.updateBrand(this.brandId, this.brandForm.value).subscribe(
-  //       (response) => {
-  //         this.commonService.openAlert(response.message);
-  //         this.cancel();
-  //       },
-  //       (err) => {
-  //         if (err instanceof HttpErrorResponse) {
-  //           if (err.status === 422) {
-  //             const validatonErrors = err.error.errors;
-  //             Object.keys(validatonErrors).forEach(prop => {
-  //               const formControl = this.brandForm.get(prop);
-  //               if (formControl) {
-  //                 formControl.setErrors({
-  //                   serverError: validatonErrors[prop]
-  //                 });
-  //               }
-  //             });
-  //           }
-  //         }
-  //       }
-  //     )
-  //   }
-  // }
+  // Extract selected category IDs
+  const selectedCategoryIds = this.categorys.filter(category => category.selected)
+                                             .map(category => category.id);
 
- brandFormSubmit() {
-    if (this.brandForm.invalid) {
-        return;
-    }
+  // Prepare form data
+  const formData = {
+      name: this.brandForm.value.name,
+      category: selectedCategoryIds
+  };
 
-    // Extract selected category IDs
-    const selectedCategoryIds = this.categorys.filter(category => category.selected)
-                                               .map(category => category.id);
-
-    // Prepare form data
-    const formData = {
-        name: this.brandForm.value.name,
-        category: this.brandForm.value.category ? selectedCategoryIds : []
-    };
-
-    if (this.brandId === undefined) {
-        // Create brand
-        this.brandservice.storeBrand(formData).subscribe(
-            (response) => {
-                this.commonService.openAlert(response.message);
-                this.cancel();
-            },
-            (err) => {
-                this.handleError(err);
-            }
-        );
-    } else {
-        // Update brand
-        this.brandservice.updateBrand(this.brandId, formData).subscribe(
-            (response) => {
-                this.commonService.openAlert(response.message);
-                this.cancel();
-            },
-            (err) => {
-                this.handleError(err);
-            }
-        );
-    }
+  if (this.brandId === undefined) {
+      // Create brand
+      this.brandservice.storeBrand(formData).subscribe(
+          (response) => {
+              this.commonService.openAlert(response.message);
+              this.cancel();
+          },
+          (err) => {
+              this.handleError(err);
+          }
+      );
+  } else {
+      // Update brand
+      this.brandservice.updateBrand(this.brandId, formData).subscribe(
+          (response) => {
+              this.commonService.openAlert(response.message);
+              this.cancel();
+          },
+          (err) => {
+              this.handleError(err);
+          }
+      );
+  }
 }
-  
-  
-
-  
 
   handleError(err: any) {
     if (err instanceof HttpErrorResponse) {
@@ -232,8 +235,8 @@ export class BrandCreateComponent implements OnInit {
       }
     }
   }
+
   cancel(): void {
     this.dialog.closeAll();
   }
-
 }

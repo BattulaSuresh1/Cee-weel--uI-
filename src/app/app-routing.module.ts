@@ -30,6 +30,7 @@ import { RequestListComponent } from './components/store-managment/request-list/
 import { BrandComponent } from './components/brand/brand.component';
 import { BrandCreateComponent } from './components/brand/brand-create/brand-create.component';
 import { VendorsComponent } from './components/vendors/vendors.component';
+import { VendorsCreateComponent } from './components/vendors/vendors-create/vendors-create.component';
 
 // let user_details = JSON.parse(localStorage.getItem('user_details'));
 
@@ -87,6 +88,7 @@ const routes: Routes = [
   { path: 'cart', component: CartComponent },
   { path: 'brand', component: BrandComponent},
   { path: 'brand-create', component: BrandCreateComponent},
+  { path: 'vendor-create', component: VendorsCreateComponent},
 
   { path: 'order-products', component:OrderProductsComponent },
   { path: 'order-place/:orderId', component: OrderPlaceComponent},

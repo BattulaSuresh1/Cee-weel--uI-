@@ -15,7 +15,7 @@ export class PrescriptionService {
       private router:Router) { }
 
   public getPrescriptions(params:any = ""):Observable<any>{
-    return this.http.post(`${this.REST_API_SERVER}/prescriptionslist?${params.toString()}`,{ params: ""});
+    return this.http.post(`${this.REST_API_SERVER}/prescriptionslist?customerId=${params.toString()}`,{ params: ""});
   }
 
   public storePrescription(params):Observable<any>{

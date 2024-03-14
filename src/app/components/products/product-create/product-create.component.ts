@@ -30,7 +30,7 @@ export class ProductCreateComponent implements OnInit {
   SecondDropdownDisabled: Boolean = true;
   sizeDisabled:boolean = true;
 
-
+  filteredBrands: any[] = [];
   itemCtrl: FormControl;
   filteredItems: Observable<any[]>;
   showAddButton: boolean = false;
@@ -40,14 +40,13 @@ export class ProductCreateComponent implements OnInit {
   items: string[] = [  ];
 
 
-
   onCategoryChange() {
     // Enable the second dropdown only if the selected category is "frames"
-    this.SecondDropdownDisabled = this.selectedCategory  == 'CONTACT LENSE - ( CL )' || this.selectedCategory  ==  'OPTHALMIC LENSE - ( OL )';
+    this.SecondDropdownDisabled = this.selectedCategory  == '3' || this.selectedCategory  ==  '4';
 
-    this.isSecondDropdownDisabled = this.selectedCategory == 'FRAME - ( FR )';
+    this.isSecondDropdownDisabled = this.selectedCategory == '1';
 
-    this.sizeDisabled =  this.selectedCategory == 'CONTACT LENSE - ( CL )' || this.selectedCategory =='OPTHALMIC LENSE - ( OL )';
+    this.sizeDisabled =  this.selectedCategory == '3' || this.selectedCategory =='4';
 
 
     // Reset the selected type when disabling the second dropdown
@@ -113,7 +112,18 @@ export class ProductCreateComponent implements OnInit {
     this.itemCtrl.setValue(option.value.name);
     this.productForm.get('brand').setValue(option.value.id);
     this.productForm.get('brand').updateValueAndValidity();
+   
   }
+
+//   optionSelecteds(option) {
+//     // Set the display value to the name of the selected item type
+//     this.itemCtrl.setValue(option.value.name);
+//     // Set the selected item type ID in the form control
+//     this.productForm.get('item_type').setValue(option.value.id);
+//     // Update the validity of the form control
+//     this.productForm.get('item_type').updateValueAndValidity();
+// }
+
 
   addOption() {
     let option = this.removePromptFromOption(this.itemCtrl.value);
@@ -156,7 +166,40 @@ export class ProductCreateComponent implements OnInit {
     this.createproductForm();
     this.getProductsData();
 
-      this.productForm.get('item_type').valueChanges.subscribe(val => {
+    //   this.productForm.get('item_type').valueChanges.subscribe(val => {
+
+    //   this.productForm.get('rim_type').enable();
+    //   this.productForm.get('size').enable();
+    //   this.productForm.get('prescription_type').enable();
+    //   this.productForm.get('glass_color').enable();
+    //   this.productForm.get('color').enable();
+    //   this.productForm.get('material').enable();
+    //   this.productForm.get('frame_width').enable();
+      
+    //   if(val == 'CONTACT LENSE - ( CL )' || val ==  'OPTHALMIC LENSE - ( OL )'){
+    //     this.productForm.get('rim_type').disable();
+    //     this.productForm.get('size').disable();
+    //     this.productForm.get('prescription_type').disable();
+    //     this.productForm.get('material').disable();
+    //     this.productForm.get('frame_width').disable();
+    //   }
+
+    //   if(val == 'FRAME - ( FR )' ){
+    //     this.productForm.get('prescription_type').disable();
+    //   }
+
+    //   if(val == 'FRAME - ( FR )' || val == 'OPTHALMIC LENSE - ( OL )'){
+    //     this.productForm.get('glass_color').disable();
+    //   }
+
+    //   if(val == 'OPTHALMIC LENSE - ( OL )'){
+    //     this.productForm.get('color').disable();
+    //     this.productForm.get('collection_type').disable();
+    //   }
+    // });
+
+  
+       this.productForm.get('item_type').valueChanges.subscribe(val => {
 
       this.productForm.get('rim_type').enable();
       this.productForm.get('size').enable();
@@ -166,7 +209,7 @@ export class ProductCreateComponent implements OnInit {
       this.productForm.get('material').enable();
       this.productForm.get('frame_width').enable();
       
-      if(val == 'CONTACT LENSE - ( CL )' || val ==  'OPTHALMIC LENSE - ( OL )'){
+      if(val == '3' || val ==  '4'){
         this.productForm.get('rim_type').disable();
         this.productForm.get('size').disable();
         this.productForm.get('prescription_type').disable();
@@ -174,47 +217,129 @@ export class ProductCreateComponent implements OnInit {
         this.productForm.get('frame_width').disable();
       }
 
-      if(val == 'FRAME - ( FR )' ){
+      if(val == '1' ){
         this.productForm.get('prescription_type').disable();
       }
 
-      if(val == 'FRAME - ( FR )' || val == 'OPTHALMIC LENSE - ( OL )'){
+      if(val == '1' || val == '4'){
         this.productForm.get('glass_color').disable();
       }
 
-      if(val == 'OPTHALMIC LENSE - ( OL )'){
+      if(val == '4'){
         this.productForm.get('color').disable();
         this.productForm.get('collection_type').disable();
       }
     });
+
+    
+    // Subscribe to changes in the item_type form control
+    this.productForm.get('item_type').valueChanges.subscribe(val => {
+      // Check if brands array is properly initialized and has a filter method
+      if (Array.isArray(this.brands) && typeof this.brands.filter === 'function') {
+          // Filter the brands based on the selected item type
+          this.filteredBrands = this.brands.filter(brand => {
+              // Check if the brand's category array contains the selected item type
+              return brand.category.includes(val);
+          });
+      }
+  });
   }
 
-  getProductsData():void{
+  // getProductsData():void{
 
-    if(this.productId == undefined){
+  //   if(this.productId == undefined){
+  //     this.productService.createProduct().subscribe(
+  //       (res:any)=>{
+
+  //           this.item_types = res.data.item_types;
+  //           this.rim_types = res.data.rim_types;
+  //           this.brands = res.data.brands;
+  //           this.items = this.brands;
+  //           this.shapes = res.data.shapes;
+  //           this.collection_types = res.data.collection_types;
+  //           this.materials = res.data.materials;
+  //           this.colors = res.data.colors;
+  //           this.prescription_types = res.data.prescription_types;
+  //           this.glass_colors = res.data.glass_colors;
+  //           this.frame_widths = res.data.frame_widths;
+  //           this.barcodes = res.data.barcodes;
+  //       }
+  //     )
+  //   }
+  //   else{
+  //     this.buttonText = "Update";
+  //     this.productService.showProduct(this.productId).subscribe(
+  //       (res:any)=>{
+  //         console.log(res)
+  //         this.item_types = res.data.item_types;
+  //         this.rim_types = res.data.rim_types;
+  //         this.brands = res.data.brands;
+  //         this.shapes = res.data.shapes;
+  //         this.collection_types = res.data.collection_types;
+  //         this.materials = res.data.materials;
+  //         this.colors = res.data.colors;
+  //         this.prescription_types = res.data.prescription_types;
+  //         this.glass_colors = res.data.glass_colors;
+  //         this.frame_widths = res.data.frame_widths;
+  //         this.barcodes = res.data.barcodes;
+
+  //           let product = res.data.product;
+
+  //         let selectedBrand = this.brands.find(val => {
+  //           return val.id == product.brand;
+  //         });
+
+  //         this.itemCtrl.setValue(selectedBrand.name);
+
+  //           this.productForm.patchValue({
+  //             name: product.name,
+  //             item_type: +product.item_type,
+  //             item_code: product.item_code,
+  //             item_description: product.item_description,
+  //             price: product.price,
+  //             discount:product.discount,
+  //             brand: +product.brand,
+  //             model: product.model,
+  //             color: +product.color,
+  //             size: +product.size,
+  //             rim_type: +product.rim_type,
+  //             collection_type: +product.collection_type,
+  //             material: +product.material,
+  //             prescription_type: +product.prescription_type,
+  //             glass_color: +product.glass_color,
+  //             frame_width: +product.frame_width,
+  //             catalog_no: product.catalog_no,
+  //             images: product.images,
+  //             barcode : product.barcode
+  //           });
+  //       }
+  //     )
+  //   }
+  // }
+
+  getProductsData(): void {
+    if (this.productId == undefined) {
       this.productService.createProduct().subscribe(
-        (res:any)=>{
-
-            this.item_types = res.data.item_types;
-            this.rim_types = res.data.rim_types;
-            this.brands = res.data.brands;
-            this.items = this.brands;
-            this.shapes = res.data.shapes;
-            this.collection_types = res.data.collection_types;
-            this.materials = res.data.materials;
-            this.colors = res.data.colors;
-            this.prescription_types = res.data.prescription_types;
-            this.glass_colors = res.data.glass_colors;
-            this.frame_widths = res.data.frame_widths;
-            this.barcodes = res.data.barcodes;
+        (res: any) => {
+          this.item_types = res.data.item_types;
+          this.rim_types = res.data.rim_types;
+          this.brands = res.data.brands;
+          this.items = this.brands;
+          this.shapes = res.data.shapes;
+          this.collection_types = res.data.collection_types;
+          this.materials = res.data.materials;
+          this.colors = res.data.colors;
+          this.prescription_types = res.data.prescription_types;
+          this.glass_colors = res.data.glass_colors;
+          this.frame_widths = res.data.frame_widths;
+          this.barcodes = res.data.barcodes;
         }
-      )
-    }
-    else{
+      );
+    } else {
       this.buttonText = "Update";
       this.productService.showProduct(this.productId).subscribe(
-        (res:any)=>{
-          console.log(res)
+        (res: any) => {
+          console.log(res);
           this.item_types = res.data.item_types;
           this.rim_types = res.data.rim_types;
           this.brands = res.data.brands;
@@ -226,40 +351,35 @@ export class ProductCreateComponent implements OnInit {
           this.glass_colors = res.data.glass_colors;
           this.frame_widths = res.data.frame_widths;
           this.barcodes = res.data.barcodes;
-
-            let product = res.data.product;
-
-          let selectedBrand = this.brands.find(val => {
-            return val.id == product.brand;
+  
+          let product = res.data.product;
+  
+          this.productForm.patchValue({
+            name: product.name,
+            item_type: +product.item_type,
+            item_code: product.item_code,
+            item_description: product.item_description,
+            price: product.price,
+            discount: product.discount,
+            brand: +product.brand,
+            model: product.model,
+            color: +product.color,
+            size: +product.size,
+            rim_type: +product.rim_type,
+            collection_type: +product.collection_type,
+            material: +product.material,
+            prescription_type: +product.prescription_type,
+            glass_color: +product.glass_color,
+            frame_width: +product.frame_width,
+            catalog_no: product.catalog_no,
+            images: product.images,
+            barcode: product.barcode
           });
-
-          this.itemCtrl.setValue(selectedBrand.name);
-
-            this.productForm.patchValue({
-              name: product.name,
-              item_type: product.item_type,
-              item_code: product.item_code,
-              item_description: product.item_description,
-              price: product.price,
-              discount:product.discount,
-              brand: +product.brand,
-              model: product.model,
-              color: +product.color,
-              size: +product.size,
-              rim_type: +product.rim_type,
-              collection_type: +product.collection_type,
-              material: +product.material,
-              prescription_type: +product.prescription_type,
-              glass_color: +product.glass_color,
-              frame_width: +product.frame_width,
-              catalog_no: product.catalog_no,
-              images: product.images,
-              barcode : product.barcode
-            });
         }
-      )
+      );
     }
   }
+  
 
   createproductForm(){
     this.productForm = this.fb.group({

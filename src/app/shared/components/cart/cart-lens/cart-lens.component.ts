@@ -1,12 +1,17 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, AfterViewInit, ChangeDetectorRef, Inject } from '@angular/core';
 import { environment } from '../../../../../environments/environment';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { PrescriptionService } from '../../../../services/prescription.service';
 import { ProductService } from '../../../../services/product.service';
-import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
+import { MatDialogConfig, MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 import { CommonService } from '../../../../services/common.service';
 import { AuthenticationService } from '../../../../auth/services/authentication.service';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { MatSelectChange } from '@angular/material/select';
+import { Observable } from 'rxjs';
+import { startWith, debounceTime, switchMap, map } from 'rxjs/operators';
+
 
 
 const dialogConfig= new MatDialogConfig();
@@ -24,21 +29,23 @@ export class CartLensComponent implements OnInit {
   public SERVER_PATH = environment.REST_API_URL;
   @Input() cart:any;
   @Input() prescriptions:any;
-
+  @Input() lensData: any;
   @Output() newEvent = new EventEmitter();
 
   public prescription:any;
   public prescriptionForm:FormGroup;
+  public customerId:string = this.authenticationService.getCustomerId();
 
   public selected:number = 0;
   public lensForm:FormGroup;
   public measurementsForm:FormGroup;
   
 
+  lensMasters: any[] = [];
+  searchTerm: any ;
   
   selectedEye: string;
   itemCode: string;
-
 
   eye_selections: any[] = [];
   brands: any[] = [];
@@ -54,6 +61,8 @@ export class CartLensComponent implements OnInit {
   mrps: any[] = [];
   cost_prices: any[] = [];
 
+  selectedLensMasterData: any; // Variable to store selected lens master data
+
   public diameters:string[] = [];
   public base_curves:string[] = [];
   public vertex_distances:string[] = [];
@@ -68,300 +77,258 @@ export class CartLensComponent implements OnInit {
   public productPrice:number = 0;
   offerPrice:any
 
-  isRightEyeTypeEnabled: boolean = false;
-  isTypeEnabled: boolean = false;
-  isIndexEnabled: boolean = false;
-  isDiaEnabled: boolean = false;
-  isFromEnabled: boolean = false;
-  isToEnabled: boolean = false;
-  isRpEnabled: boolean = false;
-  isMaxcylEnabled: boolean = false;
-  isMrpEnabled: boolean = false;
-  isCostpriceEnabled: boolean = false;
-  isLeftEyeTypeEnabled: boolean;
-  isBothEyesTypeEnabled: boolean;
+  searchResults: any[];
 
+  
+  public prescriptionList:any = [];
 
+  searchTermctr = new FormControl('');
+  
+  cartId: number;
+  // customerID: number;
+  customer_id: string = this.authenticationService.getCustomerId();
   constructor(private fb:FormBuilder,
     private dialog:MatDialog,
     private commonService: CommonService,
     private prescriptionService: PrescriptionService,
     private productService:ProductService,
-    private authenticationService: AuthenticationService) { }
+    private authenticationService: AuthenticationService,
+    private httpClient: HttpClient,
+    private cdr: ChangeDetectorRef,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    // private dialogRef: MatDialogRef<CartLensComponent>
+    ) {
+      this.cartId = data?.cartId  ,
+    // this.customerID = data?.customerId
+    this.customer_id = data?.customerId ;
+  }
 
 
-    
-
-  
     ngOnInit(): void {
       this.createForm();
       this.createLensForm();
       this.createMeasurementsForm();
       this.getDetails();
-      this.getCart();
       this.setupProductDetails();
+      this.getCart(); 
       this.prescriptionForm.get('prescriptionId').valueChanges.subscribe(id => {
         this.prescription = this.prescriptions.find(p => p.id === id);
-      })
-  
-      
-  
-        const rightEyeControls = [
-        'brand', 'type', 'index', 'dia', 'from', 'to', 'rp', 'max_cyl'
-      ];
-  
-      const leftEyeControls = [
-        'brand', 'type', 'index', 'dia', 'from', 'to', 'rp', 'max_cyl'
-      ];
-  
-      const bothEyesControls = [
-        'brand', 'type', 'index', 'dia', 'from', 'to', 'rp', 'max_cyl'
-      ];
-  
-  
-      rightEyeControls.forEach(control => {
-        this.lensForm.get(`right_eye.${control}`).valueChanges.subscribe(() => {
-          this.updateRightEyeName();
-        });
       });
-  
-      leftEyeControls.forEach(control => {
-        this.lensForm.get(`left_eye.${control}`).valueChanges.subscribe(() => {
-          this.updateLeftEyeName();
-        });
+    
+      this.lensForm.get("eye_selection").valueChanges.subscribe(data => {
+        console.log(data.value);
+        if(data == '1'){
+          this.updateDataRightEye();
+        } else if(data == '2'){
+          this.updateDataLeftEye();
+        } else if(data == '3'){
+          this.updateDataBothEyes();
+        }
       });
-  
-      bothEyesControls.forEach(control => {
-        this.lensForm.get(`both_eyes.${control}`).valueChanges.subscribe(() => {
-          this.updateBothEyesName();
-        });
+    
+      console.log(this.cartId , this.customer_id , 'cart ....')
+      // Check if cartId is available in data, otherwise set it to a default value
+      this.cartId = this.data?.cartId || null;
+     
+      this.customer_id =this.data?.customerId;
+      this.setupSearchAutocomplete();
+    }
+    
+    // setupSearchAutocomplete(): void {
+    //   this.searchTermctr.valueChanges.pipe(
+    //     startWith(''),
+    //     debounceTime(300),
+    //     switchMap(term => {
+    //       if (!term || term.length < 5) {
+    //         // Don't make a request if the search term is too short
+    //         return [];
+    //       }
+    //       return this.productService.searchLensMasters(term).pipe(
+    //         map(response => response.data)
+    //       );
+    //     })
+    //   ).subscribe(results => {
+    //     this.searchResults = results;
+    //     this.cdr.detectChanges(); // Detect changes to update the view
+    //   });
+    // }
+
+    setupSearchAutocomplete(): void {
+      this.searchTermctr.valueChanges.pipe(
+        startWith(''),
+        debounceTime(300),
+        switchMap(term => {
+          if (!term || term.length < 5) {
+            // Don't make a request if the search term is too short
+            return [];
+          }
+          return this.productService.searchLensMasters(term).pipe(
+           
+            map(response => response.data.filter(item =>
+              
+              item.code.toLowerCase().includes(term.toLowerCase()) || // Check if code includes the term
+              item.name.toLowerCase().includes(term.toLowerCase()) ,// Check if name includes the term
+              console.log(term ,'term'),
+            ))
+          );
+        })
+      ).subscribe(results => {
+        this.searchResults = results;
+        this.cdr.detectChanges(); // Detect changes to update the view
       });
+    }
+    
   
-      
-  
+    displayFn(lensMaster: any): string {
+      return lensMaster ? `${lensMaster.code}` : '';
     }
     
    
-  
-    updateRightEyeName(): void {
-      const rightEyeGroup = this.lensForm.get('right_eye');
     
-      const brand = this.brands.find(item => item.id === rightEyeGroup.get('brand').value)?.name;
-      const type = this.types.find(item => item.id === rightEyeGroup.get('type').value)?.name;
-      const index = this.indexs.find(item => item.id === rightEyeGroup.get('index').value)?.name;
-      const dia = this.dias.find(item => item.id === rightEyeGroup.get('dia').value)?.name;
-      const from = this.froms.find(item => item.id === rightEyeGroup.get('from').value)?.from;
-      const to = this.tos.find(item => item.id === rightEyeGroup.get('to').value)?.to;
-      // const rp = this.rps.find(item => item.id === rightEyeGroup.get('rp').value)?.rp;
-      const maxCyl = this.max_cyls.find(item => item.id === rightEyeGroup.get('max_cyl').value)?.name;
-    
-      const concatenatedName = `${brand}-${type}-${index}-${dia}-${from}/${to} -Max Cyl${maxCyl}`;
-    
-      // Set the concatenated name to the 'name' form control
-      this.lensForm.get('right_eye.name').setValue(concatenatedName);
-    }
-    
-    updateLeftEyeName(): void {
-      const leftEyeGroup = this.lensForm.get('left_eye');
-    
-      const brand = this.brands.find(item => item.id === leftEyeGroup.get('brand').value)?.name;
-      const type = this.types.find(item => item.id === leftEyeGroup.get('type').value)?.name;
-      const index = this.indexs.find(item => item.id === leftEyeGroup.get('index').value)?.name;
-      const dia = this.dias.find(item => item.id === leftEyeGroup.get('dia').value)?.name;
-      const from = this.froms.find(item => item.id === leftEyeGroup.get('from').value)?.from;
-      const to = this.tos.find(item => item.id === leftEyeGroup.get('to').value)?.to;
-      // const rp = this.rps.find(item => item.id === leftEyeGroup.get('rp').value)?.rp;
-      const maxCyl = this.max_cyls.find(item => item.id === leftEyeGroup.get('max_cyl').value)?.name;
-    
-      const concatenatedName = `${brand}-${type}-${index}-${dia}-${from}/${to} -Max Cyl${maxCyl}`;
-    
-      // Set the concatenated name to the 'name' form control
-      this.lensForm.get('left_eye.name').setValue(concatenatedName);
+    searchLensMasters(): void {
+    const searchTerm = this.searchTermctr.value;
+    if (!searchTerm) {
+      console.error('Search term is empty.');
+      return;
     }
   
-    updateBothEyesName(): void {
-      const bothEyesGroup = this.lensForm.get('both_eyes');
+    this.productService.searchLensMasters(searchTerm).subscribe(
+      (response) => {
+        if (response.success) {
+          this.searchResults = response.data;
+          this.selectedLensMasterData = response.data;
+          
+          // Assuming you want to patch the value of a form control
+          // Replace 'formControlName' with the actual name of your form control
+          this.lensForm.get('formControlName').patchValue(response.data);
+        } else {
+          console.error('No matching records found.');
+        }
+      },
+      (error) => {
+        console.error('Error searching for lens masters:', error);
+      }
+    );
+  }
+
     
-      const brand = this.brands.find(item => item.id === bothEyesGroup.get('brand').value)?.name;
-      const type = this.types.find(item => item.id === bothEyesGroup.get('type').value)?.name;
-      const index = this.indexs.find(item => item.id === bothEyesGroup.get('index').value)?.name;
-      const dia = this.dias.find(item => item.id === bothEyesGroup.get('dia').value)?.name;
-      const from = this.froms.find(item => item.id === bothEyesGroup.get('from').value)?.from;
-      const to = this.tos.find(item => item.id === bothEyesGroup.get('to').value)?.to;
-      // const rp = this.rps.find(item => item.id === bothEyesGroup.get('rp').value)?.rp;
-      const maxCyl = this.max_cyls.find(item => item.id === bothEyesGroup.get('max_cyl').value)?.name;
     
-      const concatenatedName = `${brand}-${type}-${index}-${dia}-${from}/${to} -Max Cyl${maxCyl}`;
-    
-      // Set the concatenated name to the 'name' form control
-      this.lensForm.get('both_eyes.name').setValue(concatenatedName);
+
+    updateDataRightEye(): void {
+     
+      console.log('lensdata', this.searchResults);
+      if (!this.searchResults || this.searchResults.length == 0) {
+        console.error('No matching lens master found or array is empty.');
+        return;
+      }
+      const lensData = this.searchResults[0];
+      this.lensForm.get("right_eye").patchValue({
+        brand:lensData.brand,
+        type:lensData.type,
+        index:lensData.index,
+        dia:lensData.dia,
+        from:lensData.from,
+        to:lensData.to,
+        rp:lensData.rp,
+        max_cyl:lensData.max_cyl,
+        code:lensData.code,
+        name:lensData.name,
+        mrp:lensData.mrp,
+        cost_price:lensData.cost_price,
+      },{onlySelf: true, emitEvent:true});
+
+      this.lensForm.get("right_eye").updateValueAndValidity();
+      // this.cdr.detectChanges();
+      console.log('updated Lens:: ',this.lensForm.value)
     }
-  
     
-   
+    updateDataLeftEye(): void {
+     
+      console.log('lensdata', this.searchResults);
+      if (!this.searchResults || this.searchResults.length == 0) {
+        console.error('No matching lens master found or array is empty.');
+        return;
+      }
+      const lensData = this.searchResults[0];
+      // Patch form controls with data from selectedLensMaster
+      // console.log('updated Lens:: ',this.lensForm.value)
+      this.lensForm.get("left_eye").patchValue({
+        brand:lensData.brand,
+        type:lensData.type,
+        index:lensData.index,
+        dia:lensData.dia,
+        from:lensData.from,
+        to:lensData.to,
+        rp:lensData.rp,
+        max_cyl:lensData.max_cyl,
+        code:lensData.code,
+        name:lensData.name,
+        mrp:lensData.mrp,
+        cost_price:lensData.cost_price
+      },{onlySelf: true, emitEvent:true});
+
+      this.lensForm.get("left_eye").updateValueAndValidity();
+      // this.cdr.detectChanges();
+      console.log('updated Lens:: ',this.lensForm.value)
+    }
+
+    updateDataBothEyes(): void {
+     
+      console.log('lensdata', this.searchResults);
+      if (!this.searchResults || this.searchResults.length == 0) {
+        console.error('No matching lens master found or array is empty.');
+        return;
+      }
+      const lensData = this.searchResults[0];
+      // Patch form controls with data from selectedLensMaster
+      // console.log('updated Lens:: ',this.lensForm.value);
+      this.lensForm.get("both_eyes").patchValue({
+        brand:lensData.brand,
+        type:lensData.type,
+        index:lensData.index,
+        dia:lensData.dia,
+        from:lensData.from,
+        to:lensData.to,
+        rp:lensData.rp,
+        max_cyl:lensData.max_cyl,
+        code:lensData.code,
+        name:lensData.name,
+        mrp:lensData.mrp,
+        cost_price:lensData.cost_price
+
+      },{onlySelf: true, emitEvent:true});
+
+      this.lensForm.get("both_eyes").updateValueAndValidity();
+      // this.cdr.detectChanges();
+      console.log('updated Lens:: ',this.lensForm.value)
+    }
     
-   
-  
-      onBrandChange(brandId: any): void {
-        // Implement your logic to enable/disable Type based on the selected Brand
-        this.isTypeEnabled = !!brandId;
-      
-        // Reset Type and Index values if Brand is changed
-        if (!brandId) {
-          this.lensForm.get('right_eye.type').reset();
-          this.lensForm.get('right_eye.index').reset();
-          this.lensForm.get('right_eye.dia').reset();
-          this.lensForm.get('right_eye.from').reset();
-          this.lensForm.get('right_eye.to').reset();
-          this.lensForm.get('right_eye.rp').reset();
-          this.lensForm.get('right_eye.max_cyl').reset();
-          this.lensForm.get('right_eye.mrp').reset();
-          this.lensForm.get('right_eye.cost_price').reset();
-         
-          this.isMrpEnabled = false;
-        }
-  
-         // Reset Type and Index values if Brand is changed
-         else if (!brandId) {
-          this.lensForm.get('left_eye.type').reset();
-          this.lensForm.get('left_eye.index').reset();
-          this.lensForm.get('left_eye.dia').reset();
-          this.lensForm.get('left_eye.from').reset();
-          this.lensForm.get('left_eye.to').reset();
-          this.lensForm.get('left_eye.rp').reset();
-          this.lensForm.get('left_eye.max_cyl').reset();
-          this.lensForm.get('left_eye.mrp').reset();
-          this.lensForm.get('left_eye.cost_price').reset();       
-    
-          this.isMrpEnabled = false;
-        }
-  
-         // Reset Type and Index values if Brand is changed
-         else if (!brandId) {
-          this.lensForm.get('both_eyes.type').reset();
-          this.lensForm.get('both_eyes.index').reset();
-          this.lensForm.get('both_eyes.dia').reset();
-          this.lensForm.get('both_eyes.from').reset();
-          this.lensForm.get('both_eyes.to').reset();
-          this.lensForm.get('both_eyes.rp').reset();
-          this.lensForm.get('both_eyes.max_cyl').reset();
-          this.lensForm.get('both_eyes.mrp').reset();
-          this.lensForm.get('both_eyes.cost_price').reset();
-         
-          this.isMrpEnabled = false;
-        }
-      }
-      
-      // Implement similar methods for Type, Index, and Dia if needed
-      
-      onTypeChange(typeId: any): void {
-        // Implement your logic to enable/disable Index based on the selected Type
-        this.isIndexEnabled = !!typeId;
-      
-        // Reset Index value if Type is changed
-        if (!typeId) {
-          this.lensForm.get('right_eye.index').reset();
-          this.isMrpEnabled = false;
-        }
-  
-        else if (!typeId) {
-          this.lensForm.get('left_eye.index').reset();
-          this.isMrpEnabled = false;
-        }
-  
-        if (!typeId) {
-          this.lensForm.get('both_eyes.index').reset();
-          this.isMrpEnabled = false;
-        }
-      }
-      
-      onIndexChange(indexId: any): void {
-        // Implement your logic to enable/disable Dia based on the selected Index
-        this.isDiaEnabled = !!indexId;
-      
-        // Reset Dia value if Index is changed
-        if (!indexId) {
-          this.lensForm.get('right_eye.dia').reset();
-        }
-  
-        else if (!indexId) {
-          this.lensForm.get('left_eye.dia').reset();
-        }
-  
-        if (!indexId) {
-          this.lensForm.get('both_eyes.dia').reset();
-        }
-      }
-  
-      onDiaChange(diaId: any): void {
-        // Implement your logic to enable/disable Dia based on the selected Index
-        this.isFromEnabled = !!diaId;
-      
-        // Reset from value if dia is changed
-        if (!diaId) {
-          this.lensForm.get('right_eye.from').reset();
-        }
-      }
-  
-      onFromChange(fromId: any): void {
-        // Implement your logic to enable/disable Dia based on the selected Index
-        this.isToEnabled = !!fromId;
-      
-        // Reset to value if from is changed
-        if (!fromId) {
-          this.lensForm.get('right_eye.to').reset();
-        }
-      }
-  
-      onToChange(toId: any): void {
-        // Implement your logic to enable/disable Dia based on the selected Index
-        this.isRpEnabled = !!toId;
-      
-        // Reset rp value if to is changed
-        if (!toId) {
-          this.lensForm.get('right_eye.rp').reset();
-        }
-      }
-    
-      onRpChange(rpId: any): void {
-        // Implement your logic to enable/disable Dia based on the selected Index
-        this.isMaxcylEnabled = !!rpId;
-      
-        // Reset max cyl value if rp is changed
-        if (!rpId) {
-          this.lensForm.get('right_eye.max_cyl').reset();
-        }
-      }
-  
-      onMaxcylChange(maxcylId: any): void {
-        // Implement your logic to enable/disable Dia based on the selected Index
-        this.isMrpEnabled = !!maxcylId;
-      
-        // Reset mrp value if rp is changed
-        if (!maxcylId) {
-          this.lensForm.get('right_eye.mrp').reset();
-        }
-      }
-  
-      onMrpChange(mrpId: any): void {
-        // Implement your logic to enable/disable Dia based on the selected Index
-        this.isCostpriceEnabled = !!mrpId;
-      
-        // Reset mrp value if rp is changed
-        if (!mrpId) {
-          this.lensForm.get('right_eye.cost_price').reset();
-        }
-      }
-    
-  
     getDetails():void{
+
+      this.prescriptionService.getPrescriptions(this.customer_id).subscribe(
+        (response: any) => {
+          if (response.success) {
+            this.prescriptions = response.data;
+            console.log(this.prescriptions, '....prescriptions....');
+          } else {
+            console.error("Failed to fetch prescription details:", response.message);
+          }
+        },
+        (error) => {
+          console.error('Error fetching prescription details:', error);
+        }
+      );
+     
+      
+      
       this.prescriptionService.createPrescription().subscribe(
         (res:any) => {
         
-         
-           this.brands = res.data.lens_brands;
+           this.brands = res.data.lens_brands.filter(brand => brand.category.includes(3) || brand.category.includes(4));
            this.eye_selections = res.data.eye_selections;
-           this.types = res.data.type;
+
+
+           this.types =  res.data.type;
            this.indexs = res.data.index;
            this.dias = res.data.dia;
            this.froms = res.data.from;
@@ -382,7 +349,6 @@ export class CartLensComponent implements OnInit {
            this.shapes = res.data.shapes;
   
            
-  
         },
         (err) => {
           console.log(err);
@@ -390,48 +356,56 @@ export class CartLensComponent implements OnInit {
       )
     }
   
-    getCart(){
-      this.productService.showCart(this.cart.id).subscribe(
-        (response:any) => {
-          if(response.data.cart.prescription != undefined){
-            this.prescription = response.data.cart.prescription;
-            this.prescriptionForm.patchValue({
-              prescriptionId: response.data.cart.prescription.id
-            });
-          }
-          if(response.data.cart.lens != undefined){
-            this.lensForm.patchValue({
-              life_style: +response.data.cart.lens.life_style,
-              lens_recommended: +response.data.cart.lens.lens_recommended,
-              tint_type: response.data.cart.lens.tint_type,
-              mirror_coating: +response.data.cart.lens.mirror_coating,
-              colour: +response.data.cart.lens.tint_value,
-              gradient: +response.data.cart.lens.tint_value,
-             
-              
-              brand: +response.data.cart.lens.lens_brands,
-              type: +response.data.cart.lens.type,
-              index: +response.data.cart.lens.index,
-              dia: +response.data.cart.lens.dia,
-              from: +response.data.cart.lens.from,
-              to: +response.data.cart.lens.to,
-              rp: +response.data.cart.lens.rp,
-              max_cyl: +response.data.cart.lens.max_cyl,
-              code: +response.data.cart.lens.code,
-              name: +response.data.cart.lens.name,
-              mrp: +response.data.cart.lens.mrp,
-              cost_price: +response.data.cart.lens.cost_price,
-  
-  
-            });
-          }
-            
-          if( 
-            response.data.cart.measurements != undefined && 
-            response.data.cart.measurements.precalvalues.length >= 2  &&
-            response.data.cart.measurements.thickness.length >= 3
-            ){
-            this.measurementsForm.patchValue({
+   
+
+    getCart() {
+      if (!this.data?.cartId) {
+        console.error('Cart is not available.');
+        console.log(this.data.cartId , 'cartId')
+        return;
+      }
+    
+
+      this.productService.showCart(this.cartId).subscribe(
+        (response: any) => {
+            if (response.data && response.data) {
+              if(response.data.cartId.prescription != undefined){
+                // this.prescription = response.data.prescription;
+                this.prescriptionForm.patchValue({
+                  prescriptionId: response.data.prescription.id
+                });
+                console.log(this.data.cartId ,this.prescription, 'this.data.cartId')
+            }
+           
+            if (response.data.cart.lens !== undefined) {
+              this.lensForm.patchValue({
+                life_style: +response.data.cart.lens.life_style,
+                lens_recommended: +response.data.cart.lens.lens_recommended,
+                tint_type: response.data.cart.lens.tint_type,
+                mirror_coating: +response.data.cart.lens.mirror_coating,
+                colour: +response.data.cart.lens.tint_value,
+                gradient: +response.data.cart.lens.tint_value,
+                brand: +response.data.cart.lens.lens_brands,
+                type: +response.data.cart.lens.type,
+                index: +response.data.cart.lens.index,
+                dia: +response.data.cart.lens.dia,
+                from: +response.data.cart.lens.from,
+                to: +response.data.cart.lens.to,
+                rp: +response.data.cart.lens.rp,
+                max_cyl: +response.data.cart.lens.max_cyl,
+                code: +response.data.cart.lens.code,
+                name: +response.data.cart.lens.name,
+                mrp: +response.data.cart.lens.mrp,
+                cost_price: +response.data.cart.lens.cost_price,
+              });
+            }
+    
+            if (
+              response.data.cart.measurements !== undefined &&
+              response.data.cart.measurements.precalvalues.length >= 2 &&
+              response.data.cart.measurements.thickness.length >= 3
+            ) {
+              this.measurementsForm.patchValue({
                 diameter: +response.data.cart.measurements.diameter,
                 base_curve: +response.data.cart.measurements.base_curve,
                 vertex_distance: +response.data.cart.measurements.vertex_distance,
@@ -452,38 +426,40 @@ export class CartLensComponent implements OnInit {
                 thickness: {
                   center_thickness: {
                     right: response.data.cart.measurements.thickness[0].right,
-                    left:  response.data.cart.measurements.thickness[0].left
+                    left: response.data.cart.measurements.thickness[0].left
                   },
                   nose_edge_thickness: {
                     right: response.data.cart.measurements.thickness[1].right,
-                    left:  response.data.cart.measurements.thickness[1].left
+                    left: response.data.cart.measurements.thickness[1].left
                   },
                   temple_edge_thickness: {
                     right: response.data.cart.measurements.thickness[2].right,
-                    left:  response.data.cart.measurements.thickness[2].left
+                    left: response.data.cart.measurements.thickness[2].left
                   },
                 },
-                lens_size:{
+                lens_size: {
                   lens_width: response.data.cart.measurements.lens_width,
                   bridge_distance: response.data.cart.measurements.bridge_distance,
                   lens_height: response.data.cart.measurements.lens_height,
                   temple: response.data.cart.measurements.temple,
                   total_width: response.data.cart.measurements.total_width,
                 }
-            });
-  
+              });
+    
+            }
           }
+        },
+        (error) => {
+          console.error('Error fetching cart:', error);
         }
       );
     }
-  
+    
     createForm(){
       this.prescriptionForm = this.fb.group({
         prescriptionId:["",[Validators.required]]
       })
     }
-     
-  
    
   
     createLensForm(): void {
@@ -498,18 +474,18 @@ export class CartLensComponent implements OnInit {
   
     createEyeFormGroup(): FormGroup {
       return this.fb.group({
-        brand: ['', ],
-        type: ['', ],
-        index: ['', ],
-        dia: ['', ],
-        from: ['', ],
-        to: ['', ],
-        rp: ['', ],
-        max_cyl: ['', ],
-        code: ['', ],
-        name: ['', ],
-        mrp: ['', ],
-        cost_price: ['', ],
+        brand: ["", [Validators.required]],
+        type: ["", [Validators.required] ],
+        index: ["", [Validators.required]],
+        dia: ["", [Validators.required] ],
+        from: ["", [Validators.required]],
+        to: ["", [Validators.required] ],
+        rp: ["", [Validators.required]],
+        max_cyl: ["", [Validators.required] ],
+        code: ["", [Validators.required]],
+        name: ["", [Validators.required] ],
+        mrp: ["", [Validators.required]],
+        cost_price: ["", [Validators.required]],
       });
     }
   
@@ -527,18 +503,22 @@ export class CartLensComponent implements OnInit {
   
     
     onEyeSelectionChange(event: any): void {
-  
-      console.log(event, 'selection')
-      this.selectedEye = event.value;
-     
-  
-   
+      console.log('selectedEye' , event.value)  ;   
+       this.selectedEye = event.value; // Assuming the event value contains the selected eye ('right_eye', 'left_eye', or 'both_eyes')
     }
   
-    // Add a function to get the current eye form based on user selection
-  getCurrentEyeForm(): FormGroup {
-    return this.lensForm.get(this.selectedEye) as FormGroup;
-  }
+    getCurrentEyeForm(): FormGroup {
+      switch (this.selectedEye) {
+        case '1':
+          return this.lensForm.get('right_eye') as FormGroup;
+        case '2':
+          return this.lensForm.get('left_eye') as FormGroup;
+        case '3':
+          return this.lensForm.get('both_eyes') as FormGroup;
+        default:
+          throw new Error('Invalid selected eye value');
+      }
+    }
   
   
   
@@ -604,24 +584,38 @@ export class CartLensComponent implements OnInit {
       this.lensFormValidate.gradient.updateValueAndValidity();
     }
   
-    tabChange(input:number = 0){
+    // tabChange(input:number = 0){
   
-      if(input === 1){
-        this.prescriptionFormSubmit()
-      }else if (input === 2){
+    //   if(input === 1){
+    //     this.prescriptionFormSubmit()
+    //   }else if (input === 2){
+    //     this.lensFormSubmit();
+    //   }
+  
+    //   this.selected = input;
+    // }
+  
+    tabChange(input: number = 0) {
+      // Ensure that cart is defined and has an id property
+      // if (!this.cart || !this.cart.id) {
+      //   console.error('Cart ID is not available.');
+      //   return;
+      // }
+  
+      if (input == 1) {
+        this.prescriptionFormSubmit();
+      } else if (input == 2) {
         this.lensFormSubmit();
       }
   
       this.selected = input;
     }
-  
-    
    
   
     setupProductDetails(){
-      this.productPrice = +this.cart.product.price;
-      this.productDiscount = +this.cart.product.discount;
-      this.productQuantity = +this.cart.quantities;
+      this.productPrice = +this.cart?.product?.price;
+      this.productDiscount = +this.cart?.product?.discount;
+      this.productQuantity = +this.cart?.quantities;
       this.calculateTotal();
     }
   
@@ -716,53 +710,89 @@ export class CartLensComponent implements OnInit {
        },
        (err)=> console.log(err)
      )
+     console.log(params , 'params')
     }
+
+    
   
-    prescriptionFormSubmit(){
-      if(this.prescriptionForm.invalid){
-        return;
+    
+    
+
+    prescriptionFormSubmit() {
+      if (this.prescriptionForm.invalid) {
+          return;
       }
   
-      let params = { 
-        prescriptionId: this.prescriptionForm.get('prescriptionId').value,
-        quantities: this.productQuantity,
-        status: this.cart.status
-       };
-  
-      this.productService.updateCart(this.cart.id, params).subscribe(
-        (response:any)=>{
-           this.commonService.openAlert(response.message); 
-        },
-        (err)=> console.log(err)
-      )
-    }
-
-    lensFormSubmit(){
-
+      const cartId = this.data?.cartId;
       
   
-       this.lensForm.addControl("cartId", new FormControl(this.cart.id));
+      const formData = { ...this.prescriptionForm.value, cartId }; // Use prescriptionForm instead of lensForm
   
-      this.productService.addLensToCart(this.lensForm.value).subscribe(
-        (response:any)=>{
-           this.commonService.openAlert(response.message); 
-           //console.log(response);
+      let params = { 
+          prescriptionId: this.prescriptionForm.get('prescriptionId').value,
+          quantities: this.productQuantity,
+          status: cartId,
+      };
+  
+      this.productService.updateCart(cartId, params).subscribe(
+          (response: any) => {
+              this.commonService.openAlert(response.message);
+          },
+          (err) => console.log(err)
+      );
+  }
+  
+  
+    
+ 
+    lensFormSubmit(): void {
+      // if (this.lensForm.invalid) {
+      //   // Handle invalid form
+      //   return;
+      // }
+    
+      const cartId = this.data?.cartId;
+    
+      // Add cartId to the lens form value
+      const formData = { ...this.lensForm.value, cartId };
+    
+      console.log( formData , cartId , 'cartId')
+      // Submit lens form data
+      this.productService.addLensToCart(formData).subscribe(
+        (response: any) => {
+          this.commonService.openAlert(response.message);
+          // Emit event to notify parent component
+          this.newEvent.emit("Lens added to cart");
+          // Call method to store lens data
+          this.storeLensData(formData);
         },
-        (err)=> console.log(err)
-      )
+        (error) => {
+          // Handle error
+        }
+      );
     }
+    
   
+    storeLensData(lensFormData: any): void {
+     
+      console.log("Storing lens data:", lensFormData);
+    }
+    
   
-   
-  
+    
     measurementFormSubmit(): void {
       if (this.measurementsForm.invalid) {
         console.error("Measurement form is invalid");
         return;
       }
-  
+    
+      const cartId = this.data?.cartId;
+    
+      // Add cartId to the measurements form value
+      const formData = { ...this.measurementsForm.value, cartId };
+    
       // Call service method to add measurements to cart
-      this.productService.addMeasurementsToCart(this.measurementsForm.value).subscribe(
+      this.productService.addMeasurementsToCart(formData).subscribe(
         (response: any) => {
           console.log("Measurement form submitted successfully:", response);
           this.commonService.openAlert(response.message); 
@@ -772,7 +802,6 @@ export class CartLensComponent implements OnInit {
         }
       );
     }
-  
     
     cancel():void{
       this.dialog.closeAll();

@@ -12,7 +12,7 @@
                 </ng-template>
                 <button type="button" (click)="remove()" mat-stroked-button >REMOVE</button>
 
-                <button type="button" class="lensbtn" (click)="openLensSearchDialog()" mat-stroked-button color="primary">Lens</button>
+                <button type="button" class="lensbtn" (click)="openLensSearchDialog(cart.id)" mat-stroked-button color="primary">Add Lens</button>
                 
             </div>
 
@@ -32,7 +32,7 @@
         <mat-form-field class="counter">
             <button   mat-button mat-icon-button matPrefix    (click)="decrement()" ><mat-icon>remove</mat-icon></button>
             <input matInput type="number" [value]="productQuantity"/>
-            <button  mat-button mat-icon-button matSuffix (click)="increment()"  ><mat-icon>add</mat-icon> </button>
+            <button  mat-button mat-icon-button matSuffix (click)="increment()"  ><mat-icon>add </mat-icon> </button>
         </mat-form-field>
             
     </td>
@@ -174,7 +174,6 @@
                                                               {{ lensFormValidate?.eye_selection?.errors?.serverError }}
                                                             </mat-error>
                                                           </mat-form-field>
-
                                                          <hr>
 
                                                           

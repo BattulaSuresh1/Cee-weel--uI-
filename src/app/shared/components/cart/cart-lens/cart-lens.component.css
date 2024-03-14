@@ -1,0 +1,156 @@
+.cart{
+    border: 2px solid #eee;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.az-profile-work-list .media-body p {
+    font-size: 15px;
+}
+
+.az-profile-work-list .media-body h6{
+    font-size: 13px;
+}
+
+.productImg{
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+}
+
+.productDesc {
+    padding: 8px;
+}
+
+.img{
+    width: 85px;
+    height: 85px;
+    margin-bottom: 8px; 
+}
+
+.productImg button {
+    line-height: inherit;
+}
+
+.lensbtn{
+    margin: 10px;
+}
+
+.lensForm mat-form-field,
+.measurementsForm  mat-form-field{
+    width: 280px;
+}
+
+
+
+::ng-deep .lensForm .mat-form-field-wrapper,
+::ng-deep .measurementsForm .mat-form-field-wrapper {
+    padding-bottom: 0rem !important;
+}
+::ng-deep .lensForm .mat-error,
+::ng-deep .measurementsForm .mat-error {
+    margin-top: 1rem;
+}
+
+.forPrescription{
+    width: 98% !important;
+    margin: 0 0.5rem !important;
+}
+.forPrescritionTable{
+    margin-bottom: 1rem;
+}
+.mat-tab-group {
+    margin-top: 1rem;
+}
+
+.mat-tab-label .mat-tab-label-content {
+    color: #1c273c!important;
+    font-weight: 600!important;
+}
+
+table mat-form-field{
+    width: 80px;
+    margin-left: 16px;
+}
+
+.footer-block{
+    margin-bottom: 1rem;
+}
+
+.tab-content{
+    margin-top: 1rem;
+}
+
+.lensForm mat-form-field{
+    margin: 0.5rem;
+    font-weight:bold;
+}
+
+.lensFormSearch{
+    width: 100%;
+    margin-left: 3rem;
+    margin-right: 3rem;
+}
+
+.measurementsForm mat-form-field,
+.measurementsForm table{
+    margin: 0.5rem;
+}
+.measurementsForm table{
+    display: inline-block;
+    width: 98%;
+}
+
+.measurementsForm table img{
+    width: 120px;
+}
+
+.measurementsForm table mat-form-field{
+    width: 50%;
+}
+
+
+.mat-tab-body-content{
+    overflow: hidden;
+}
+
+.mat-radio-button {
+    border: 1px solid #eee !important;
+    padding: 5px!important;
+    width: 165px!important;
+}
+
+.lens-size-table mat-form-field{
+    width: 70%!important;
+}
+
+.precal-values-imaage{
+    width: 98%;
+}
+
+.button-group button{
+    margin-left: 1rem;
+}
+
+.counter {
+    width: 60%;
+    text-align: center;
+    /* -moz-appearance: textfield; */
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+display: none;
+}
+
+.productDetails{
+display: flex;
+font-size: 17px;
+font-weight: 500;
+width: 100%;
+}
+  
+
+.mat-tab-body-content {
+    overflow: hidden !important;
+}

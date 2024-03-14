@@ -86,6 +86,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   }
   
   
+  
   ngAfterViewInit() {
     // this.dataSource.paginator = this.paginator;
   }
@@ -157,20 +158,42 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     this.getData(this.current_page, this.page_length);
   }
 
+  // getData(currentPage, perPage): void {
+  //   let params = new HttpParams();
+  //   params = params.set('current_page', currentPage);
+  //   params = params.set('per_page', perPage);
+  //   let filter = this.filter.value;
+  //   params = params.set('filter', filter);
+  //   // if(this.filter.value != "") {
+  //   //   let filter = this.filter.value;
+  //   //   params = params.set('filter',filter);
+  //   // }
+
+  //   this.productService.getProducts(params)
+  //     .subscribe((response: any) => {
+  //       this.dataSource = new MatTableDataSource<any>(response.data);
+  //       this.dataSource.paginator = this.paginator;
+  //       this.page_length = response.total;
+  //     })
+  // }
+
   getData(currentPage, perPage): void {
     let params = new HttpParams();
     params = params.set('current_page', currentPage);
     params = params.set('per_page', perPage);
     let filter = this.filter.value;
     params = params.set('filter', filter);
-    // if(this.filter.value != "") {
-    //   let filter = this.filter.value;
-    //   params = params.set('filter',filter);
-    // }
 
     this.productService.getProducts(params)
       .subscribe((response: any) => {
-        this.dataSource = new MatTableDataSource<any>(response.data);
+          // Map item_type ID to its name
+          const data = response.data.map(item => {
+            return {
+              ...item,
+              item_type: item.item_type_name // Use item_type_name instead of item_type
+            };
+          });
+        this.dataSource = new MatTableDataSource<any>(data); // Use the mapped data
         this.dataSource.paginator = this.paginator;
         this.page_length = response.total;
       })

@@ -1,20 +1,17 @@
 import { Component, OnInit, ViewChild, Inject ,  ElementRef, HostListener, NgModule  } from '@angular/core';
-import { NgForm, FormGroup, FormBuilder, Validators, MinLengthValidator, FormControl } from '@angular/forms';
+import { NgForm, FormGroup, FormBuilder, Validators,  FormControl } from '@angular/forms';
 import { HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { CURRENT_PAGE, GET_ALL } from '../../../shared/constants/pagination.contacts';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CommonService } from '../../../services/common.service';
 import { RolesService } from '../../../services/roles.service';
 import { Role } from '../../../shared/models/Role';
-import { CustomerService } from '../../../services/customer.service';
 import { Router } from '@angular/router';
-import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
-import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { VendorService } from 'src/app/services/vendor.service';
 
 export interface state{
     name: string;
 }
-
 
 @Component({
   selector: 'app-vendors-create',
@@ -25,7 +22,7 @@ export class VendorsCreateComponent implements OnInit {
 
   /** USING THIS TO RESET FORM  WITH OUT SHOWING FORMVALIDAITON ERRORS**/
   @ViewChild('myForm', {static: false}) myForm: NgForm;
- public customerForm:FormGroup;
+ public vendorForm:FormGroup;
 
   selectedCountry: number; // Property to store the selected country ID
   // selectedCountry = new FormControl('');
@@ -38,9 +35,9 @@ export class VendorsCreateComponent implements OnInit {
  public page_length:number = GET_ALL;
  public current_page:number = CURRENT_PAGE;
 
- public customerId:number = undefined;
+ public vendorId:number = undefined;
  public buttonText:string = "Create";
- public uploadType:string ="customer";
+ public uploadType:string ="vendor";
 
   constructor(private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -48,9 +45,9 @@ export class VendorsCreateComponent implements OnInit {
     private fb:FormBuilder,
     private rolesService:RolesService,
     private router: Router,
-    private customerService:CustomerService,
+    private vendorService:VendorService,
     private el: ElementRef ){
-     this.customerId = data.id;
+     this.vendorId = data.id;
     }
 
     onDatepickerInput(event: any) {
@@ -82,17 +79,17 @@ export class VendorsCreateComponent implements OnInit {
 
     
   ngOnInit(): void {
-    this.createcustomerForm();  //this method is used to intialize the form of customer data
-    this.getCustomerData();     // this method is used fetch the data of customers from the API
+    this.createvendorForm();  //this method is used to intialize the form of vendor data
+    this.getVendorData();     // this method is used fetch the data of vendors from the API
       
-     this.customerForm.get('country').valueChanges.subscribe(
+     this.vendorForm.get('country').valueChanges.subscribe(
       val  => {
         // debugger;
         console.log('country changed..', val);
         this.onCountryChange(val);
       }
     )
-    this.customerForm.get('state').valueChanges.subscribe(
+    this.vendorForm.get('state').valueChanges.subscribe(
       val =>{
         console.log('state changed..', val);
         this.onStateChange(val);
@@ -100,9 +97,9 @@ export class VendorsCreateComponent implements OnInit {
     )
   }
 
-  getCustomerData():void{
-    if(this.customerId === undefined ){
-      this.customerService.createCustomer().subscribe(
+  getVendorData():void{
+    if(this.vendorId === undefined ){
+      this.vendorService.createVendor().subscribe(
         (res:any)=>{
          
             this.countries = res.data.countries;
@@ -114,43 +111,43 @@ export class VendorsCreateComponent implements OnInit {
      
     }else{
       this.buttonText = "Update";
-      this.customerService.showCustomer(this.customerId).subscribe(
+      this.vendorService.showVendor(this.vendorId).subscribe(
         (res:any)=>{
             this.countries = res.data.countries;
             this.states = res.data.states;
             this.cities = res.data.cities;
-            let customer = res.data.customer;
+            let vendor = res.data.vendor;
             console.log(res);
 
-            this.customerForm.patchValue({
-              name: customer.name,
-              email: customer.email,
-              phone: customer.phone,
-              code: customer.code,
-              profession: customer.profession,
-              alternate_phone: customer.alternate_phone,
-              date_of_birth: customer.date_of_birth,
-              age: customer.age,
-              doa: customer.doa,
-              life_style: customer.life_style,
-              address: customer.address,
-              nearby: customer.nearby,
-              city: +customer.city,
-              state: +customer.state,
-              country: +customer.country_id,
-              images: customer.images,  
+            this.vendorForm.patchValue({
+              name: vendor.name,
+              email: vendor.email,
+              phone: vendor.phone,
+              code: vendor.code,
+              profession: vendor.profession,
+              alternate_phone: vendor.alternate_phone,
+              date_of_birth: vendor.date_of_birth,
+              age: vendor.age,
+              doa: vendor.doa,
+              life_style: vendor.life_style,
+              address: vendor.address,
+              nearby: vendor.nearby,
+              city: +vendor.city,
+              state: +vendor.state,
+              country: +vendor.country_id,
+              images: vendor.images,  
             });
 
-            this.customerForm.updateValueAndValidity();
+            this.vendorForm.updateValueAndValidity();
 
-            console.log(this.customerForm.value);
+            console.log(this.vendorForm.value);
         }
       )
     }
   }
 
-  createcustomerForm(){
-    this.customerForm = this.fb.group({
+  createvendorForm(){
+    this.vendorForm = this.fb.group({
       name: ['',[Validators.required]],
       // email: ['', [Validators.required,Validators.email]],
       email: [''],
@@ -171,12 +168,12 @@ export class VendorsCreateComponent implements OnInit {
       images: [''],
      
     });
-    this.customerForm.get('date_of_birth').valueChanges.subscribe((dateOfBirth) => {
+    this.vendorForm.get('date_of_birth').valueChanges.subscribe((dateOfBirth) => {
       if (dateOfBirth) {
         const birthDate = new Date(dateOfBirth);
         const today = new Date();
         const age = today.getFullYear()- birthDate.getFullYear();
-        this.customerForm.get('age').setValue(age);
+        this.vendorForm.get('age').setValue(age);
       }
     });
 
@@ -187,45 +184,45 @@ export class VendorsCreateComponent implements OnInit {
   onCountryChange(countryId: number): void{
 
   
-    this.customerService.getStatesCountry(countryId).subscribe(data => {
+    this.vendorService.getStatesCountry(countryId).subscribe(data => {
        this.states = data.states;
     });
   }
 
   
   onStateChange(stateId: number): void {
-    this.customerService.getStatesCities(stateId).subscribe(data => {
+    this.vendorService.getStatesCities(stateId).subscribe(data => {
       this.cities = data.cities;     
     });
   }
   get formValidate(){
-    return this.customerForm.controls;
+    return this.vendorForm.controls;
   }
 
   addAttachment(fileName:any){
-    this.customerForm.patchValue({images: fileName})
+    this.vendorForm.patchValue({images: fileName})
   }
 
-  customerFormSubmit(){
+  vendorFormSubmit(){
     const countryId = this.selectedCountry;
     
         // Other form data
-        const formData = this.customerForm.value;
+        const formData = this.vendorForm.value;
 
         // Add the countryId to the form data
         formData.country_id = countryId;
 
-    if(this.customerForm.invalid){
+    if(this.vendorForm.invalid){
       return;
     }
 
-    if(this.customerId == undefined){
-      this.customerService.storeCustomer(this.customerForm.value).subscribe(
+    if(this.vendorId == undefined){
+      this.vendorService.storeVendors(this.vendorForm.value).subscribe(
         (response)=>{
-            this.customerForm.reset();
+            this.vendorForm.reset();
             this.myForm.resetForm();
             this.commonService.openAlert(response.message);
-            this.createcustomerForm();
+            this.createvendorForm();
             // this.router.navigate(['/order-products']);
         },
         (err)=>{
@@ -234,7 +231,7 @@ export class VendorsCreateComponent implements OnInit {
               if(err.status === 422) {
                 const validatonErrors = err.error.errors;
                 Object.keys(validatonErrors).forEach( prop => {
-                  const formControl = this.customerForm.get(prop);
+                  const formControl = this.vendorForm.get(prop);
                   if(formControl){
                     formControl.setErrors({
                       serverError: validatonErrors[prop]
@@ -247,7 +244,7 @@ export class VendorsCreateComponent implements OnInit {
       )
 
     }else{
-      this.customerService.updateCustomer(this.customerId,this.customerForm.value).subscribe(
+      this.vendorService.updateVendor(this.vendorId,this.vendorForm.value).subscribe(
         (response)=>{
             this.commonService.openAlert(response.message);
             this.cancel();
@@ -257,7 +254,7 @@ export class VendorsCreateComponent implements OnInit {
               if(err.status === 422) {
                 const validatonErrors = err.error.errors;
                 Object.keys(validatonErrors).forEach( prop => {
-                  const formControl = this.customerForm.get(prop);
+                  const formControl = this.vendorForm.get(prop);
                   if(formControl){
                     formControl.setErrors({
                       serverError: validatonErrors[prop]

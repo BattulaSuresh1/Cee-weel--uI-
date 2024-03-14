@@ -24,6 +24,17 @@ export class BrandsService {
 
 
 
+  //  // Method to fetch brands from an API endpoint
+  //  fetchBrands(): Observable<any[]> {
+  //   return this.http.get<any[]>('api/brands');
+  // }
+
+  
+  // // Method to fetch brands based on the selected item type
+  // fetchBrandsByItemType(itemType: string): Observable<any[]> {
+  //   return this.http.get<any[]>(`${this.REST_API_SERVER}/brands/item-type/${itemType}`);
+  // }
+
   public getbrandList(params): Observable<any> {
     return this.http.post(`${this.REST_API_SERVER}/brandlist?${params.toString()}`,{ params: ""});
   }
@@ -32,8 +43,12 @@ export class BrandsService {
     return this.http.get(`${this.REST_API_SERVER}/brand-create`);
   }
 
-  public showBrandDetails(id:number|string):Observable<any>{
-    return this.http.put(`${this.REST_API_SERVER}/brand-show/${id}`,{});
+  // public showBrandDetails(id:number):Observable<any>{
+  //   return this.http.put(`${this.REST_API_SERVER}/brand-show/${id}`,{category:['']});
+  // }
+
+  public showBrandDetails(id:number):Observable<any>{
+    return this.http.put(`${this.REST_API_SERVER}/brand-show/${id}` ,{});
   }
   public storeBrand(params): Observable<any> {
     return this.http.post(`${this.REST_API_SERVER}/brand-store`, params);

@@ -115,7 +115,7 @@ export class CustomersComponent implements OnInit {
     this.dialog.afterAllClosed.subscribe(e=>{
       this.getData(this.current_page, this.page_length);
     });
-  }
+  };
 
   delete(id:number):void{
 

@@ -23,7 +23,7 @@ export class OrderCreateComponent implements OnInit {
   public balanceAmount: number;
   isPaymentUpdated: boolean = false;
   private _router = Router;
-  private _snackBar: MatSnackBar;
+  ;
 
   public orderPayments:any[] = [];
   
@@ -38,6 +38,7 @@ export class OrderCreateComponent implements OnInit {
     private location: Location,
     private router: Router,
     private route: ActivatedRoute,
+    private _snackBar: MatSnackBar
     ) { }
 
   ngOnInit(): void {
@@ -124,11 +125,7 @@ export class OrderCreateComponent implements OnInit {
         if (res.sales_invoice_pdf) {
           const pdfUrl = res.sales_invoice_pdf;
           const newWindow = window.open(pdfUrl, '_blank');
-          // if (newWindow) {
-          //   newWindow.onload = () => {
-          //     newWindow.print();
-          //   };
-          // }
+         
         }
       },
       (err) => err
