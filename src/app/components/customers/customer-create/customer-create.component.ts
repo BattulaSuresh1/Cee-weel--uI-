@@ -11,7 +11,19 @@ import { Router } from '@angular/router';
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { debounceTime } from 'rxjs/operators';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
-
+import { MAT_DATE_FORMATS } from '@angular/material/core';
+   
+export const MY_DATE_FORMATS = {
+    parse: {
+      dateInput: 'DD/MM/YYYY',
+    },
+    display: {
+      dateInput: 'DD/MM/YYYY',
+      monthYearLabel: 'MMMM YYYY',
+      dateA11yLabel: 'LL',
+      monthYearA11yLabel: 'MMMM YYYY'
+    },
+};
 
 export interface state{
     name: string;
@@ -20,7 +32,10 @@ export interface state{
 @Component({
   selector: 'app-customer-create',
   templateUrl: './customer-create.component.html',
-  styleUrls: ['./customer-create.component.css']
+  styleUrls: ['./customer-create.component.css'],
+  providers: [
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
+  ]
 })
 
 export class CustomerCreateComponent implements OnInit {
@@ -29,8 +44,7 @@ export class CustomerCreateComponent implements OnInit {
   @ViewChild('myForm', {static: false}) myForm: NgForm;
  public customerForm:FormGroup;
 
-  selectedCountry: number; // Property to store the selected country ID
-  // selectedCountry = new FormControl('');
+  selectedCountry= 101; // Property to store the selected country ID
   selectedState = new FormControl('');
   public roles:Role[];
   public countries:any[] =[];
@@ -56,32 +70,7 @@ export class CustomerCreateComponent implements OnInit {
     }
 
     
-    // onDatepickerInput(event: any) {
-    //   const input = event.target as HTMLInputElement;
-    //   let trimmed = input.value.replace(/\s+/g, ''); // Remove whitespace
-    
-    //   if (trimmed.length > 2 && trimmed.indexOf('/') === -1) {
-    //     trimmed = trimmed.replace(/^(\d{2})(\d{2})/, '$1/$2/');
-    //   }
-    
-        
-    //   // Setting the value with time to match the format of the date picker
-    //   const currentDate = new Date(); // Get current date and time
-    //   const [day, month, year] = trimmed.split('/').map(Number); // Extract day, month, year
-    
-    //   if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
-    //     currentDate.setDate(day);
-    //     currentDate.setMonth(month - 1); // Month starts from 0
-    //     currentDate.setFullYear(year);
-    
-    //     // Formatting the date to match the format of the date picker's selected value
-    //     const formattedDate  = `${day}-${month}-${year}`; // "2001-12-06T18:30:00.000Z"
-    //     console.log(formattedDate); 
-    //     // Store the formattedDate variable where you're storing the date_of_birth value
-    //   }
-    
-    //   input.value = trimmed;
-    // }
+   
 
     onDatepickerInput(event: any) {
       const input = event.target as HTMLInputElement;
@@ -114,6 +103,7 @@ export class CustomerCreateComponent implements OnInit {
     this.createcustomerForm();  //this method is used to intialize the form of customer data
     this.getCustomerData();     // this method is used fetch the data of customers from the API
       
+    this.onStateChange(36);
      this.customerForm.get('country').valueChanges.subscribe(
       val  => {
         // debugger;
@@ -127,6 +117,9 @@ export class CustomerCreateComponent implements OnInit {
         this.onStateChange(val);
       }
     )
+
+    
+  
   }
 
   getCustomerData():void{
@@ -212,8 +205,8 @@ export class CustomerCreateComponent implements OnInit {
       address:  [''],
       nearby:  [''],
       city:  ['',[Validators.required]],
-      state:  ['',[Validators.required]],
-      country:  ['',[Validators.required]],
+      state:  [36,[Validators.required]],
+      country:  [[Validators.required]],
       images: [''],
       // billing_street: ['',[Validators.required]],
       // billing_city: ['',[Validators.required]],
@@ -237,17 +230,14 @@ export class CustomerCreateComponent implements OnInit {
 
   }
 
-  // CountryChange(country_id:number){
-  //   this.customerService.getStatesCountry(country_id).subscribe(data => {
-  //     this.countries = data.countries;
-  //  }); 
-  // }
+
   
   onCountryChange(countryId: number): void{
 
-    
     this.customerService.getStatesCountry(countryId).subscribe(data => {
        this.states = data.states;
+
+   
     });
   }
 

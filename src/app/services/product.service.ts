@@ -44,12 +44,25 @@ export class ProductService {
     return this.http.post(`${this.REST_API_SERVER}/cart-store`, params)
   }
 
+
   public getCarts(params: any = ""): Observable<any> {
     return this.http.post(`${this.REST_API_SERVER}/cartslist?${params.toString()}`, { params: "" });
   }
 
   public updateCart(id: number, params): Observable<any> {
     return this.http.post(`${this.REST_API_SERVER}/cart-update/${id}`, params);
+  }
+
+  // public searchLensMasters(searchTerm: any = ""): Observable<any> {
+  //   return this.http.post(`${this.REST_API_SERVER}/search-lens`, searchTerm .toString());
+  // }
+
+  public searchLensMasters(searchTerm: any = ""): Observable<any> {
+    return this.http.post(`${this.REST_API_SERVER}/search-lens`, { searchTerm });
+  }
+
+  getLensMasterById(id: number): Observable<any> {
+    return this.http.get<any>(`/api/getLensMasterById?id=${id}`);
   }
 
   public addLensToCart(params): Observable<any> {
@@ -77,6 +90,8 @@ export class ProductService {
     return this.http.post(`${this.REST_API_SERVER}/order-update/${id}`, params);
   }
 
+  
+  
   // public getCustomerOrder(customerId) {
   //   return this.http.get(`${this.REST_API_SERVER}/customer-order/${customerId}`,customerId);
   // }

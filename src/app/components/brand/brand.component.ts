@@ -70,10 +70,12 @@ export class BrandComponent implements OnInit {
       );
   }
 
+  pageIndex = 0;
 
   ngOnInit(): void {
     this.getData(this.current_page, this.page_length);
     this.filter.valueChanges.subscribe((f) => {
+      this.page_length = ITEMS_PER_PAGE;
       this.getData(this.current_page, this.page_length);
     });
   }
@@ -164,12 +166,15 @@ export class BrandComponent implements OnInit {
   }
 
   advancedFilter(){
+    this.current_page = 0;
+    this.pageIndex = 0;
     this.getData(this.current_page, this.page_length);
   }
 
   pageChanged(event: PageEvent) {
     this.page_length = event.pageSize;
     this.current_page = event.pageIndex + 1;
+    this.pageIndex = event.pageIndex;
     this.getData(this.current_page, this.page_length);
   }
 

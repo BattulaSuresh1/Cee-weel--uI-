@@ -32,7 +32,7 @@
                                             (ngSubmit)="productFormSubmit()">
                                             <h3>Advance Filter</h3>
                                             <hr>
-                                            <mat-form-field appearance="outline">
+                                            <!-- <mat-form-field appearance="outline">
                                                 <mat-label>Item Type</mat-label>
                                                 <mat-select formControlName="item_type">
                                                     <mat-option value="">All</mat-option>
@@ -44,9 +44,24 @@
                                                 <mat-error *ngIf="formValidate?.item_type?.errors?.required">This field
                                                     is required.</mat-error>
                                                 <mat-error *ngIf="formValidate?.item_type?.errors?.serverError"> {{
-                                                    formValidate?.item_type?.errors?.serverError }} </mat-error>
-                                                    
+                                                    formValidate?.item_type?.errors?.serverError }} </mat-error>  
+                                            </mat-form-field> -->
+
+                                            <mat-form-field appearance="outline">
+                                                <mat-label>Item Type</mat-label>
+                                                <mat-select formControlName="item_type">
+                                                    <mat-option value="">All</mat-option>
+                                                    <mat-option *ngFor="let item_type of item_types;" [value]="item_type?.name">
+                                                        <span>{{ item_type?.name }}</span>
+                                                    </mat-option>                                                    
+                                                </mat-select>
+                                                <mat-error *ngIf="formValidate?.item_type?.errors?.required">This field
+                                                    is required.</mat-error>
+                                                <mat-error *ngIf="formValidate?.item_type?.errors?.serverError"> {{
+                                                    formValidate?.item_type?.errors?.serverError }} </mat-error>  
                                             </mat-form-field>
+
+
 
                                             <mat-form-field appearance="outline">
                                                 <mat-label>Brand</mat-label>

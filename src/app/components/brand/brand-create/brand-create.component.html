@@ -17,6 +17,19 @@
                 <mat-error *ngIf="formValidate?.name?.errors?.serverError"> {{ formValidate?.name?.errors?.serverError }} </mat-error>
             </mat-form-field>
 
+                <div *ngFor="let category of categorys">
+                    <label>
+                        <input type="checkbox" [value]="category.id.selected" formControlName="category"
+                               [(ngModel)]="category.selected"> {{ category.name }}
+                    </label>
+                </div>
+            
+                <!-- <div *ngFor="let category of categorys">
+                    <label>
+                      <input type="checkbox" [value]="category.id" formControlName="category" [checked]="category.selected"> {{ category.name }}
+                    </label>
+                </div> -->
+
             <div class="footer-block text-center">
                 <div class="button-group">
                     <button type="submit" mat-raised-button class="btn-int-blue"> {{ btnText }} </button>

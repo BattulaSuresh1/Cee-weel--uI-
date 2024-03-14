@@ -30,12 +30,14 @@ export class OrderProductsComponent implements OnInit, OnDestroy  {
   public current_page:number = CURRENT_PAGE;
 
   public products:any = [];
+
+ 
   
   public dataSource = new MatTableDataSource<any>();
 
   public cartProductList = [];
 
-  public customerId:string|number = this.authenticationService.getCustomerId();
+  public customerId:string | number = this.authenticationService.getCustomerId();
 
   public toggle = new FormControl(false);
   public showView:boolean = false;
@@ -49,6 +51,7 @@ export class OrderProductsComponent implements OnInit, OnDestroy  {
   public prescription_types:any[];
   public glass_colors:any[];
   public frame_widths:any[];
+  public totalCartItems:any = 0;
 
   public productForm: FormGroup;
 
@@ -70,6 +73,7 @@ export class OrderProductsComponent implements OnInit, OnDestroy  {
       
   }
   
+
   ngOnInit(): void {
     document.querySelector('body').classList.toggle('az-sidebar-hide');
     this.createForm();
@@ -85,7 +89,31 @@ export class OrderProductsComponent implements OnInit, OnDestroy  {
     this.filter.valueChanges.subscribe((f) => {
         this.getData(this.current_page, this.page_length = 1000);
     });
-  }
+
+    this.authenticationService.getTotalCartItems().subscribe(
+      (v:any) => {
+        this.totalCartItems = v || 0; // Update totalCartItems
+      }
+    );
+
+    // Call getCartItems to fetch total cart items
+    this.getCartItems();
+}
+
+getCartItems(): void {
+  let params = new HttpParams();
+  params = params.set('current_page', '1');
+  params = params.set('per_page', '100');
+  params = params.set('customerId', String(this.customerId));
+
+  this.productService.getCarts(params)
+    .subscribe((response: any) => {
+      this.totalCartItems = response.total || 0;
+      this.authenticationService.setTotalCartItems(this.totalCartItems);
+      console.log(this.totalCartItems, 'Total cart items');
+    })
+}
+
 
   createForm(){
     this.productForm = this.fb.group({
@@ -126,7 +154,9 @@ export class OrderProductsComponent implements OnInit, OnDestroy  {
   getProductData(){
     this.productService.createProduct().subscribe(
         (res:any)=>{
-            this.item_types = res.data.item_types;
+            // this.item_types = res.data.item_types.filter(item => item.key == 'FR' || item.key === 'SG' || item.key === 'AC');
+            this.item_types = res.data.item_types.filter(item => [1, 2, 5].includes(item.id));
+            console.log(res.data.item_types , 'test')
             this.rim_types = res.data.rim_types;
             this.brands = res.data.brands;
             this.shapes = res.data.shapes;
@@ -157,7 +187,12 @@ export class OrderProductsComponent implements OnInit, OnDestroy  {
    
     this.productService.getProducts(params)
     .subscribe((response: any) =>{
-      this.products = response.data;
+      // this.products = response.data;
+
+      // Filter products based on allowed item types
+      this.products = response.data.filter(product => {
+        return ['1', '2', '5'].includes(product.item_type);
+      });
       this.dataSource = new MatTableDataSource<any>(response.data);
       this.dataSource.paginator = this.paginator;
       this.page_length = response.total;

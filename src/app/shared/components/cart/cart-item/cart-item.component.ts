@@ -7,6 +7,8 @@ import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 import { CommonService } from '../../../../services/common.service';
 import { AuthenticationService } from '../../../../auth/services/authentication.service';
+import { CartLensComponent } from '../cart-lens/cart-lens.component'; // Import CartLensComponent
+
 
 const dialogConfig= new MatDialogConfig();
 dialogConfig.disableClose = true;
@@ -21,6 +23,7 @@ export class CartItemComponent implements OnInit {
 
   public SERVER_PATH = environment.REST_API_URL;
   @Input() cart:any;
+  @Input() cartItems: any[]; 
   @Input() prescriptions:any;
 
   @Output() newEvent = new EventEmitter();
@@ -40,7 +43,6 @@ export class CartItemComponent implements OnInit {
   // public gradients:string[] = [];
   
   selectedEye: string;
-
 
   eye_selections: any[] = [];
   brands: any[] = [];
@@ -69,7 +71,9 @@ export class CartItemComponent implements OnInit {
   public productQuantity:number = 0;
   public productPrice:number = 0;
   offerPrice:any
-
+  public cartId : number;
+  public customerId : number;
+  isRightEyeTypeEnabled: boolean = false;
   isTypeEnabled: boolean = false;
   isIndexEnabled: boolean = false;
   isDiaEnabled: boolean = false;
@@ -79,6 +83,10 @@ export class CartItemComponent implements OnInit {
   isMaxcylEnabled: boolean = false;
   isMrpEnabled: boolean = false;
   isCostpriceEnabled: boolean = false;
+  isLeftEyeTypeEnabled: boolean;
+  isBothEyesTypeEnabled: boolean;
+
+
 
 
   constructor(private fb:FormBuilder,
@@ -88,65 +96,139 @@ export class CartItemComponent implements OnInit {
     private productService:ProductService,
     private authenticationService: AuthenticationService) { }
 
+  //   openLensSearchDialog(): void {
+  //     const dialogConfig = new MatDialogConfig();
+  //     dialogConfig.disableClose = true;
+  //     dialogConfig.autoFocus = true;
+  //     dialogConfig.width = '60%'; // Set dialog width as needed
+
+  //     // Open the dialog and pass any data if required
+  //     const dialogRef = this.dialog.open(CartLensComponent, dialogConfig );
+
+  //     // Handle dialog close or dismiss if needed
+  //     dialogRef.afterClosed().subscribe(result => {
+  //         console.log('The dialog was closed');
+  //         // Handle any action after dialog close
+  //     });
+  // }
+
+  openLensSearchDialog(_cartId: number): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '60%'; // Set dialog width as needed
+
+    // Pass the cartId to the dialog component
+    console.log('cart -item cop', this.cart)
+    dialogConfig.data = { cartId: this.cart.id ,customerId: this.cart.customer_id, message: 'This is your cart ID' };
+    console.log(dialogConfig.data);
+
+    // Open the dialog and pass any data if required
+    const dialogRef = this.dialog.open(CartLensComponent, dialogConfig);
+
+    // Handle dialog close or dismiss if needed
+    dialogRef.afterClosed().subscribe(result => {
+        console.log('The dialog was closed');
+        // Handle any action after dialog close
+    });
+}
+    
+
+  // ngOnInit(): void {
+  //   this.createForm();
+  //   this.createLensForm();
+  //   this.createMeasurementsForm();
+  //   this.getDetails();
+  //   this.getCart();
+  //   this.setupProductDetails();
+  //   this.prescriptionForm.get('prescriptionId').valueChanges.subscribe(id => {
+  //     this.prescription = this.prescriptions.find(p => p.id === id);
+  //   })
+
+    
+
+  //     const rightEyeControls = [
+  //     'brand', 'type', 'index', 'dia', 'from', 'to', 'rp', 'max_cyl'
+  //   ];
+
+  //   const leftEyeControls = [
+  //     'brand', 'type', 'index', 'dia', 'from', 'to', 'rp', 'max_cyl'
+  //   ];
+
+  //   const bothEyesControls = [
+  //     'brand', 'type', 'index', 'dia', 'from', 'to', 'rp', 'max_cyl'
+  //   ];
+
+
+  //   rightEyeControls.forEach(control => {
+  //     this.lensForm.get(`right_eye.${control}`).valueChanges.subscribe(() => {
+  //       this.updateRightEyeName();
+  //     });
+  //   });
+
+  //   leftEyeControls.forEach(control => {
+  //     this.lensForm.get(`left_eye.${control}`).valueChanges.subscribe(() => {
+  //       this.updateLeftEyeName();
+  //     });
+  //   });
+
+  //   bothEyesControls.forEach(control => {
+  //     this.lensForm.get(`both_eyes.${control}`).valueChanges.subscribe(() => {
+  //       this.updateBothEyesName();
+  //     });
+  //   });
+
+    
+
+  // }
+  
   ngOnInit(): void {
     this.createForm();
     this.createLensForm();
     this.createMeasurementsForm();
-    this.getDetails();
-    this.getCart();
-    this.setupProductDetails();
-    this.prescriptionForm.get('prescriptionId').valueChanges.subscribe(id => {
-      this.prescription = this.prescriptions.find(p => p.id === id);
-    })
 
-        const eyeSelectionControl = this.lensForm.get('eye_selection');
-      eyeSelectionControl.valueChanges.subscribe((eyeSelection) => {
-        this.onEyeSelectionChange({ value: eyeSelection });
-      });
+    // Check if this.cart is defined before accessing its id property
+    if (this.cart && this.cart.id) {
+        this.getDetails();
+        this.getCart();
+        this.setupProductDetails();
+        this.prescriptionForm.get('prescriptionId').valueChanges.subscribe(id => {
+            this.prescription = this.prescriptions.find(p => p.id === id);
+        });
 
-      const rightEyeControls = [
-      'brand', 'type', 'index', 'dia', 'from', 'to', 'rp', 'max_cyl'
-    ];
+        const rightEyeControls = [
+            'brand', 'type', 'index', 'dia', 'from', 'to', 'rp', 'max_cyl'
+        ];
 
-    const leftEyeControls = [
-      'brand', 'type', 'index', 'dia', 'from', 'to', 'rp', 'max_cyl'
-    ];
+        const leftEyeControls = [
+            'brand', 'type', 'index', 'dia', 'from', 'to', 'rp', 'max_cyl'
+        ];
 
-    const bothEyesControls = [
-      'brand', 'type', 'index', 'dia', 'from', 'to', 'rp', 'max_cyl'
-    ];
+        const bothEyesControls = [
+            'brand', 'type', 'index', 'dia', 'from', 'to', 'rp', 'max_cyl'
+        ];
 
+        rightEyeControls.forEach(control => {
+            this.lensForm.get(`right_eye.${control}`).valueChanges.subscribe(() => {
+                this.updateRightEyeName();
+            });
+        });
 
-    rightEyeControls.forEach(control => {
-      this.lensForm.get(`right_eye.${control}`).valueChanges.subscribe(() => {
-        this.updateRightEyeName();
-        if (eyeSelectionControl.value === 'right_eye') {
-          this.lensFormSubmit();
-        }
-      }); 
-    });
+        leftEyeControls.forEach(control => {
+            this.lensForm.get(`left_eye.${control}`).valueChanges.subscribe(() => {
+                this.updateLeftEyeName();
+            });
+        });
 
-    leftEyeControls.forEach(control => {
-      this.lensForm.get(`left_eye.${control}`).valueChanges.subscribe(() => {
-        this.updateLeftEyeName();
-        if (eyeSelectionControl.value === 'left_eye') {
-          this.lensFormSubmit();
-        }
-      });
-    });
+        bothEyesControls.forEach(control => {
+            this.lensForm.get(`both_eyes.${control}`).valueChanges.subscribe(() => {
+                this.updateBothEyesName();
+            });
+        });
+    }
+}
 
-    bothEyesControls.forEach(control => {
-      this.lensForm.get(`both_eyes.${control}`).valueChanges.subscribe(() => {
-        this.updateBothEyesName();
-        if (eyeSelectionControl.value === 'both_eyes') {
-          this.lensFormSubmit();
-        }
-      });
-    });
-
-  }
-  
-
+ 
 
   updateRightEyeName(): void {
     const rightEyeGroup = this.lensForm.get('right_eye');
@@ -202,6 +284,34 @@ export class CartItemComponent implements OnInit {
     this.lensForm.get('both_eyes.name').setValue(concatenatedName);
   }
 
+  
+  // onBrandChange(brandId: any, eyeType: string): void {
+  //   // Implement your logic to enable/disable Type based on the selected Brand
+  //   if (eyeType === 'right_eye') {
+  //     this.isRightEyeTypeEnabled = !!brandId;
+  //   } else if (eyeType === 'left_eye') {
+  //     this.isLeftEyeTypeEnabled = !!brandId;
+  //   } else if (eyeType === 'both_eyes') {
+  //     this.isBothEyesTypeEnabled = !!brandId;
+  //   }
+  
+  //   // Reset Type and Index values if Brand is changed
+  //   if (!brandId) {
+  //     this.lensForm.get(`${eyeType}.type`).reset();
+  //     this.lensForm.get(`${eyeType}.index`).reset();
+  //     this.lensForm.get(`${eyeType}.dia`).reset();
+  //     this.lensForm.get(`${eyeType}.from`).reset();
+  //     this.lensForm.get(`${eyeType}.to`).reset();
+  //     this.lensForm.get(`${eyeType}.rp`).reset();
+  //     this.lensForm.get(`${eyeType}.max_cyl`).reset();
+  //     this.lensForm.get(`${eyeType}.mrp`).reset();
+  //     this.lensForm.get(`${eyeType}.cost_price`).reset();
+  
+  //     this.isMrpEnabled = false;
+  //   }
+  // }
+  
+ 
 
     onBrandChange(brandId: any): void {
       // Implement your logic to enable/disable Type based on the selected Brand
@@ -232,8 +342,8 @@ export class CartItemComponent implements OnInit {
         this.lensForm.get('left_eye.rp').reset();
         this.lensForm.get('left_eye.max_cyl').reset();
         this.lensForm.get('left_eye.mrp').reset();
-        this.lensForm.get('left_eye.cost_price').reset();
-       
+        this.lensForm.get('left_eye.cost_price').reset();       
+  
         this.isMrpEnabled = false;
       }
 
@@ -365,7 +475,7 @@ export class CartItemComponent implements OnInit {
         //  this.mirror_coatings = res.data.mirror_coatings;
         //  this.colours = res.data.tint_colors;
         //  this.gradients = res.data.tint_gradients;
-         this.brands = res.data.brands;
+         this.brands = res.data.lens_brands;
          this.eye_selections = res.data.eye_selections;
          this.types = res.data.type;
          this.indexs = res.data.index;
@@ -379,7 +489,6 @@ export class CartItemComponent implements OnInit {
          this.mrps = res.data.mrp
          this.cost_prices = res.data.cost_price
      
-
          this.diameters = res.data.diameters;
          this.base_curves = res.data.base_curves;
          this.vertex_distances = res.data.vertex_distances;
@@ -404,7 +513,9 @@ export class CartItemComponent implements OnInit {
           this.prescription = response.data.cart.prescription;
           this.prescriptionForm.patchValue({
             prescriptionId: response.data.cart.prescription.id
+            
           });
+          
         }
         if(response.data.cart.lens != undefined){
           this.lensForm.patchValue({
@@ -416,7 +527,7 @@ export class CartItemComponent implements OnInit {
             gradient: +response.data.cart.lens.tint_value,
            
             
-            brand: +response.data.cart.lens.brands,
+            brand: +response.data.cart.lens.lens_brands,
             type: +response.data.cart.lens.type,
             index: +response.data.cart.lens.index,
             dia: +response.data.cart.lens.dia,
@@ -491,69 +602,6 @@ export class CartItemComponent implements OnInit {
   }
    
 
-  // createLensForm():void{
-  //   this.lensForm = this.fb.group({
-  //       // life_style: ["",[Validators.required]],
-  //       // lens_recommended: ["",[Validators.required]],
-  //       // tint_type: ["",[Validators.required]],
-  //       // // mirror_coating: ["",[Validators.required]],
-  //       // mirror_coating: [""],
-  //       // colour: ["",[Validators.required]],
-  //       // gradient: ["",[Validators.required]],
-
-  //       eye_selection:this.fb.group({
-  //         right_eye : this.fb.group({
-  //           brand: ["", [Validators.required]],
-  //           type: ["", [Validators.required]],
-  //           index: ["", [Validators.required]],
-  //           dia: ["", [Validators.required]],
-  //           from: ["", [Validators.required]],
-  //           to: ["", [Validators.required]],
-  //           rp: ["", [Validators.required]],
-  //           max_cyl: ["", [Validators.required]],
-  //           code: ["", [Validators.required]],
-  //           name: ["", [Validators.required]],
-  //           mrp: ["", [Validators.required]],
-  //           cost_price: ["", [Validators.required]],
-  //         }),
-
-  //         left_eye : this.fb.group({
-
-  //           brand: ["", [Validators.required]],
-  //           type: ["", [Validators.required]],
-  //           index: ["", [Validators.required]],
-  //           dia: ["", [Validators.required]],
-  //           from: ["", [Validators.required]],
-  //           to: ["", [Validators.required]],
-  //           rp: ["", [Validators.required]],
-  //           max_cyl: ["", [Validators.required]],
-  //           code: ["", [Validators.required]],
-  //           name: ["", [Validators.required]],
-  //           mrp: ["", [Validators.required]],
-  //           cost_price: ["", [Validators.required]],
-  //         }),
-
-  //         both_eyes : this.fb.group({
-
-  //           brand: ["", [Validators.required]],
-  //           type: ["", [Validators.required]],
-  //           index: ["", [Validators.required]],
-  //           dia: ["", [Validators.required]],
-  //           from: ["", [Validators.required]],
-  //           to: ["", [Validators.required]],
-  //           rp: ["", [Validators.required]],
-  //           max_cyl: ["", [Validators.required]],
-  //           code: ["", [Validators.required]],
-  //           name: ["", [Validators.required]],
-  //           mrp: ["", [Validators.required]],
-  //           cost_price: ["", [Validators.required]],
-  //         })
-  //       }),
-        
-  //   });
-  // }
- 
-
   createLensForm(): void {
     this.lensForm = this.fb.group({
       eye_selection: ['', [Validators.required]],
@@ -598,15 +646,15 @@ export class CartItemComponent implements OnInit {
 
     console.log(event, 'selection')
     this.selectedEye = event.value;
-    //  Reset all eye controls to avoid conflicts
-     ['right_eye', 'left_eye', 'both_eyes'].forEach(eyeControl => {
-      Object.keys(this.lensForm.get(eyeControl).value).forEach(control => {
-        
-          this.lensForm.get(eyeControl).get(control).reset();
-       });
-     });
-      // If the eye selection changes, submit the form data
-  this.lensFormSubmit();
+   
+
+  // alert(event.value.name)
+  // if(event.value == '1'){
+
+  //   this.lensForm.get('right_eye.brand').disable();
+  // }else if((event.value == '2')){
+  //   this.lensForm.get('right_eye.brand').enable();
+  // }
   }
 
   // Add a function to get the current eye form based on user selection
@@ -682,12 +730,24 @@ getCurrentEyeForm(): FormGroup {
 
     if(input === 1){
       this.prescriptionFormSubmit()
-    }else if (input === 2){
+    }else if (input === 0){
       this.lensFormSubmit();
     }
 
     this.selected = input;
   }
+
+  
+  // tabChange(input:number = 0){
+
+  //   if(input === 1){
+  //     this.prescriptionFormSubmit()
+  //   }else if (this.lensForm.get('left_eye')  ){
+  //     this.lensFormSubmit();
+  //   }
+
+  //   this.selected = input;
+  // }
 
   setupProductDetails(){
     this.productPrice = +this.cart.product.price;
@@ -750,6 +810,7 @@ getTotalDiscount(): number{
     dialogRef.afterClosed().subscribe(
       (res) => {
           if(res.status){
+            this.cart.quantities = 0;
             this.deleteCart();
           }
       }
@@ -789,6 +850,8 @@ getTotalDiscount(): number{
    )
   }
 
+  
+
   prescriptionFormSubmit(){
     if(this.prescriptionForm.invalid){
       return;
@@ -808,6 +871,8 @@ getTotalDiscount(): number{
     )
   }
 
+ 
+
   // lensFormSubmit(){
 
   //   // if(this.lensForm.invalid){
@@ -825,25 +890,17 @@ getTotalDiscount(): number{
   //   )
   // }
 
-  lensFormSubmit() {
-    if (this.lensForm.invalid || !this.selectedEye) {
-      return;
-    }
-  
-    // Update eye_selection for each eye in the form data
-    ['right_eye', 'left_eye', 'both_eyes'].forEach((eyeControl) => {
-      this.lensForm.get(eyeControl).get('eye_selection').setValue(this.selectedEye);
-    });
-  
-    this.lensForm.addControl('cartId', new FormControl(this.cart.id));
-  
+  lensFormSubmit(): void {
+    this.lensForm.addControl("cartId", new FormControl(this.cart.id));
+
     this.productService.addLensToCart(this.lensForm.value).subscribe(
-      (response: any) => {
-        this.commonService.openAlert(response.message);
-      },
-      (err) => console.log(err)
+        (response: any) => {
+            this.commonService.openAlert(response.message);
+        },
+        (err) => console.log(err)
     );
-  }
+}
+
   
 
   measurementFormSubmit(){

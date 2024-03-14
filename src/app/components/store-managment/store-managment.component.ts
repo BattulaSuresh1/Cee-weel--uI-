@@ -63,6 +63,7 @@ export class StoreManagmentComponent implements OnInit {
   ngOnInit(): void {
     this.getData(this.current_page, this.page_length);
     this.filter.valueChanges.subscribe((f) => {
+      this.page_length = ITEMS_PER_PAGE;
         this.getData(this.current_page, this.page_length);
     });
   }

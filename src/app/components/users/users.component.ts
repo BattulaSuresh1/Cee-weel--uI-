@@ -55,6 +55,8 @@ import { FormControl, Validators } from '@angular/forms';
   dataSource = new MatTableDataSource<User>();
 
   public filter:FormControl = new FormControl("",Validators.required)
+
+  pageIndex = 0;
   
   constructor(
     private dialog:MatDialog,
@@ -74,6 +76,7 @@ import { FormControl, Validators } from '@angular/forms';
   ngOnInit(): void {
     this.getData(this.current_page, this.page_length);
     this.filter.valueChanges.subscribe((f) => {
+      this.page_length = ITEMS_PER_PAGE;
         this.getData(this.current_page, this.page_length);
     });
   }
@@ -163,14 +166,16 @@ import { FormControl, Validators } from '@angular/forms';
   }
 
   advancedFilter(){
+    this.current_page = 0;
+    this.pageIndex = 0;
     this.getData(this.current_page, this.page_length);
   }
 
   pageChanged(event: PageEvent) {
     this.page_length = event.pageSize;
     this.current_page = event.pageIndex + 1;
+    this.pageIndex = event.pageIndex;
     this.getData(this.current_page, this.page_length);
   }
-
 
 }

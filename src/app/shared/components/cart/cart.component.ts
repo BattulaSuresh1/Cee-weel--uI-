@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy , ViewChild } from '@angular/core';
 import { ProductService } from '../../../services/product.service';
 import { HttpParams } from '@angular/common/http';
 import { AuthenticationService } from '../../../auth/services/authentication.service';
@@ -6,6 +6,8 @@ import { PrescriptionService } from '../../../services/prescription.service';
 import { Router } from '@angular/router';
 import { MatDialog , MatDialogConfig } from '@angular/material/dialog';
 import { FormGroup } from '@angular/forms';
+import { CartLensComponent } from './cart-lens/cart-lens.component';
+
 
 @Component({
   selector: 'app-cart',
@@ -14,12 +16,13 @@ import { FormGroup } from '@angular/forms';
 })
 export class CartComponent implements OnInit, OnDestroy {
 
-
+  @ViewChild(CartLensComponent) cartLensComponentRef: CartLensComponent; // Reference to the child component
   public cartList:any = [];
   public prescriptionList:any = [];
   public TotalCartItem:number;
   public selectedViewPrescription: number = 0;
-
+  
+  
   public total:number = 0;
   public productDiscount:number = 0;
   public totalGST: number = 0;
@@ -54,69 +57,94 @@ export class CartComponent implements OnInit, OnDestroy {
     // Navigate to the overview page
     this._router.navigate(['/overview']);
   }
+  
   ngOnInit(): void {
 
     this.getCartItems();
     this.getPrescriptoins();
   }
 
+
   onInput(event: any): void {
-    // const discount = event.target.value;
-    // this.total = this.subtotal + this.totalGST - discount;
-    // this.discount = discount;
-
-    // const totalWithoutDisc = this.subtotal ;
     const totalWithoutDisc = this.totalPriceWithDiscount;
-
     if (this.discountType == "percentage") {
       const discountPercent = event.target.value;
       const discountAmt = totalWithoutDisc * (discountPercent / 100);
       this.total = Math.round(totalWithoutDisc - discountAmt);
       this.discount = discountAmt;
       this.discountPercent = discountPercent;
-    }
-    else { // Amount
+    } else { // Amount
       const discountAmt = event.target.value;
-      // const discountPercent = (discountAmt/totalWithoutDisc) * 100;
-      this.total = Math.round(totalWithoutDisc - discountAmt);
-      this.discount = discountAmt;
-      // this.discountPercent = discountPercent;
-      // console.log(discountPercent);
+      
+      // Check if product discount is provided before applying it
+      if (this.discountType === "amount" && discountAmt <= totalWithoutDisc) {
+        this.discount = discountAmt;
+      } else {
+        this.discount = 0;
+      }
+  
+      this.total = Math.round(totalWithoutDisc - this.discount);
     }
-    
-    if (this.total < 0)
+  
+    if (this.total < 0) {
       this.total = 0;
+    }
   }
+  
+  // getCartItems():void{
+  //   let params = new HttpParams();
+  //   params = params.set('current_page', '1');
+  //   params = params.set('per_page', '100');
+  //   params = params.set('customerId', this.customerId);
 
-  getCartItems():void{
+  //   this.productService.getCarts(params)
+  //   .subscribe((response: any) =>{
+  //     this.cartList = response.data;
+      
+  //     this.TotalCartItem = response.total;
+  //     this.total = 0;
+  //     this.discount = 0;
+  //     this.subtotal = 0;
+
+  //     this.cartList.map(cart => {
+  //       this.subtotal += cart.product.price * cart.quantities;
+  //       this.totalDiscount  += +cart.discount;
+  //     });
+
+  //     this.total = this.subtotal - this.totalDiscount;
+  //     this.total = Math.round(this.total);
+  //     this.totalPriceWithDiscount = this.total;
+  //     this.totalDiscount = Math.round(this.discount);
+  //     this.authenticationService.setTotalCartItems(this.TotalCartItem);
+  //     console.log(this.total ,this.discount , this.subtotal , this.TotalCartItem,'discount information');
+  //   })
+  // }
+
+  getCartItems(): void {
     let params = new HttpParams();
     params = params.set('current_page', '1');
     params = params.set('per_page', '100');
     params = params.set('customerId', this.customerId);
-
+  
     this.productService.getCarts(params)
-    .subscribe((response: any) =>{
-      this.cartList = response.data;
-      this.TotalCartItem = response.total;
-      this.total = 0;
-      this.discount = 0;
-      this.subtotal = 0;
-
-
-      this.cartList.map(cart => {
-        this.subtotal += cart.product.price * cart.quantities;
-        this.discount += +cart.discount;
-      });
-
-      console.log(this.discount , this.subtotal ,'sure');
-
-      this.total = this.subtotal - this.discount;
-      this.total = Math.round(this.total);
-      this.totalPriceWithDiscount = this.total;
-      this.totalDiscount = Math.round(this.discount);
-      this.authenticationService.setTotalCartItems(this.TotalCartItem);
-
-    })
+      .subscribe((response: any) => {
+        this.cartList = response.data;
+        this.TotalCartItem = response.total;
+        this.total = 0;
+        this.subtotal = 0;
+        this.totalDiscount = 0; // Reset totalDiscount before calculating
+  
+        this.cartList.forEach(cart => {
+          this.subtotal += cart.product.price * cart.quantities;
+          this.totalDiscount += +cart.discount; // Accumulate discounts for each item
+        });
+  
+        this.total = this.subtotal - this.totalDiscount;
+        this.total = Math.round(this.total);
+        this.totalPriceWithDiscount = this.total;
+        this.authenticationService.setTotalCartItems(this.TotalCartItem);
+        console.log(this.total, this.discount, this.subtotal, this.TotalCartItem, 'discount information');
+      })
   }
 
 
@@ -142,6 +170,10 @@ export class CartComponent implements OnInit, OnDestroy {
     this.prescriptionService.getPrescriptions(params)
     .subscribe((response: any) =>{
       this.prescriptionList = response.data;
+      
+      if (this.cartLensComponentRef) {
+        this.cartLensComponentRef.prescriptionList = this.prescriptionList;
+      }
     })
   }
 
@@ -149,11 +181,12 @@ export class CartComponent implements OnInit, OnDestroy {
     this.getCartItems();
   }
 
- 
   navigateToPlaceOrder(){
 
     if(this.cartList.length > 0){
+
       let params = { customerId: this.customerId, userId: this.userDetails.user_id ,discount: this.discount };
+      console.log(params,'checking');
       this.productService.storeOrder(params).subscribe(
         (res:any) => {
           this._router.navigate(['/order-place',res.data.id]);
@@ -172,6 +205,8 @@ export class CartComponent implements OnInit, OnDestroy {
     console.log(`The discountType selected: ${selectedDiscountType}`);
   }
   
+
+  
   onSelectProduct(event: any, productId: number): void {
  
     if (event.target.checked) {
@@ -185,6 +220,5 @@ export class CartComponent implements OnInit, OnDestroy {
       update_status:updateStatus
     };
  
-   
   }
 }

@@ -60,6 +60,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
 import { VendorsComponent } from './components/vendors/vendors.component';
 import { VendorsCreateComponent } from './components/vendors/vendors-create/vendors-create.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+// import { CartLensComponent } from './components/cart/cart-lens/cart-lens.component';
+// import { MomentDateModule } from '@angular/material-moment-adapter';
 
 
 
@@ -108,6 +112,7 @@ import { VendorsCreateComponent } from './components/vendors/vendors-create/vend
     BrandCreateComponent,
     VendorsComponent,
     VendorsCreateComponent,
+   
   ],
   imports: [
     BrowserModule,
@@ -119,6 +124,10 @@ import { VendorsCreateComponent } from './components/vendors/vendors-create/vend
     MatFormFieldModule,
     ReactiveFormsModule,
     MatAutocompleteModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    // MomentDateModule,
+
     
 
   ],

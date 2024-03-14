@@ -45,6 +45,8 @@ export class ProductsComponent implements OnInit, AfterViewInit {
 
   public filter: FormControl = new FormControl("", Validators.required)
 
+  pageIndex = 0;
+
   constructor(
     private dialog: MatDialog,
     private matIconRegistry: MatIconRegistry,
@@ -63,7 +65,10 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.getData(this.current_page, this.page_length);
     this.filter.valueChanges.subscribe((f) => {
+
+      this.page_length = ITEMS_PER_PAGE;
       this.getData(this.current_page, this.page_length);
+
     });
     this.filter.valueChanges.pipe(
       debounceTime(300), // Adjust the debounce time as needed (in milliseconds)
@@ -79,6 +84,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     });
     
   }
+  
   
   
   ngAfterViewInit() {
@@ -147,8 +153,29 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   }
 
   advancedFilter() {
+    this.current_page = 0;
+    this.pageIndex = 0;
     this.getData(this.current_page, this.page_length);
   }
+
+  // getData(currentPage, perPage): void {
+  //   let params = new HttpParams();
+  //   params = params.set('current_page', currentPage);
+  //   params = params.set('per_page', perPage);
+  //   let filter = this.filter.value;
+  //   params = params.set('filter', filter);
+  //   // if(this.filter.value != "") {
+  //   //   let filter = this.filter.value;
+  //   //   params = params.set('filter',filter);
+  //   // }
+
+  //   this.productService.getProducts(params)
+  //     .subscribe((response: any) => {
+  //       this.dataSource = new MatTableDataSource<any>(response.data);
+  //       this.dataSource.paginator = this.paginator;
+  //       this.page_length = response.total;
+  //     })
+  // }
 
   getData(currentPage, perPage): void {
     let params = new HttpParams();
@@ -156,14 +183,17 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     params = params.set('per_page', perPage);
     let filter = this.filter.value;
     params = params.set('filter', filter);
-    // if(this.filter.value != "") {
-    //   let filter = this.filter.value;
-    //   params = params.set('filter',filter);
-    // }
 
     this.productService.getProducts(params)
       .subscribe((response: any) => {
-        this.dataSource = new MatTableDataSource<any>(response.data);
+          // Map item_type ID to its name
+          const data = response.data.map(item => {
+            return {
+              ...item,
+              item_type: item.item_type_name // Use item_type_name instead of item_type
+            };
+          });
+        this.dataSource = new MatTableDataSource<any>(data); // Use the mapped data
         this.dataSource.paginator = this.paginator;
         this.page_length = response.total;
       })
@@ -172,9 +202,8 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   pageChanged(event: PageEvent) {
     this.page_length = event.pageSize;
     this.current_page = event.pageIndex + 1;
+    this.pageIndex = event.pageIndex;
     this.getData(this.current_page, this.page_length);
   }
-
-
 
 }

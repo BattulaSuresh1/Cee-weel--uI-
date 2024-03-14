@@ -58,6 +58,8 @@ export class OrdersComponent implements OnInit {
     { label: 'Order Cancelled', value: '2' },
   ];
 
+  pageIndex = 0;
+
   constructor(
     private dialog:MatDialog,
     private matIconRegistry: MatIconRegistry,
@@ -86,6 +88,7 @@ export class OrdersComponent implements OnInit {
     this.getData(this.current_page, this.page_length);
 
     this.filter.valueChanges.subscribe((f) => {
+      this.page_length = ITEMS_PER_PAGE;
         this.getData(this.current_page, this.page_length);
     });
 
@@ -101,6 +104,8 @@ export class OrdersComponent implements OnInit {
   }
 
   advancedFilter(){
+    this.current_page = 0;
+    this.pageIndex = 0;
     this.getData(this.current_page, this.page_length);
   }
 
@@ -135,6 +140,7 @@ export class OrdersComponent implements OnInit {
   pageChanged(event: PageEvent) {
     this.page_length = event.pageSize;
     this.current_page = event.pageIndex + 1;
+    this.pageIndex = event.pageIndex;
     this.getData(this.current_page, this.page_length);
   }
 

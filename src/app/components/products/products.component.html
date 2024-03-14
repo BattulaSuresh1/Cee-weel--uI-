@@ -12,7 +12,7 @@
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-12 col-sm-12">
-                        <mat-paginator #paginator *appPermissions="[['PRODUCT_LIST']]"  [length]="page_length" [pageSize]="items_per_page" [pageSizeOptions]="PAGE_SIZE_OPTIONS_DATA" (page)="pageChanged($event)"></mat-paginator>
+                        <mat-paginator #paginator *appPermissions="[['PRODUCT_LIST']]"  [length]="page_length"  [pageIndex]="pageIndex" [pageSize]="items_per_page" [pageSizeOptions]="PAGE_SIZE_OPTIONS_DATA" (page)="pageChanged($event)"></mat-paginator>
                     </div>
                     <div class="col-lg-2 col-md-12 col-sm-12">
                         <div class="button-group">
